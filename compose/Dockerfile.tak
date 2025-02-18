@@ -1,6 +1,8 @@
 FROM registry1.dso.mil/ironbank/tpc/tak/tak-server:latest
 # put updated start script in user home directory
 RUN mkdir /home/tak/scripts
+RUN mkdir /home/tak/certs
+RUN cp -rp /opt/tak/certs/* /home/tak/certs
 COPY ./start.sh /home/tak/scripts/start.sh
 LABEL maintainer="george.e.knauss.ctr@army.mil" \
       version="25.02.01" \
