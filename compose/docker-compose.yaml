@@ -1,0 +1,53 @@
+networks:
+  takserver-net-hardened:
+    driver: bridge
+
+services:
+  takserver-db:
+    image: immauss/tak-db:25.02.03
+    container_name: tak-db
+    restart: unless-stopped
+    environment:
+      - envpass="TAKTAK-DB-Pass"
+    networks:
+      takserver-net-hardened:
+        aliases:
+          - tak-database
+    volumes:
+      - tak-db:/var/lib/postgresql/data
+      - ./CoreConfig.xml:/opt/tak/CoreConfig.xml  # Bind mount the modified CoreConfig.xml
+
+  takserver:
+    image: immauss/tak-tak:25.02.03
+    container_name: tak
+    restart: unless-stopped
+    environment:
+      - envpass="TAKTAK-DB-Pass"
+      - STATE="NSS"
+      - CITY="NSC"
+      - ORGANIZATION="NSO"
+      - ORGANIZATIONAL_UNIT="NSOU"
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+      - "8444:8444"
+      - "8446:8446"
+      - "8087:8087/tcp"
+      - "8087:8087/udp"
+      - "8088:8088"
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - takserver-net-hardened
+    depends_on:
+      - takserver-db
+    volumes:
+      - takserver-data:/opt/tak
+      - ./CoreConfig.xml:/opt/tak/CoreConfig.xml  # Bind mount the modified CoreConfig.xml
+      - takserver-certs:/opt/tak/certs  # volume  mount for certs persistence
+
+volumes:
+  tak-db:
+  takserver-data:
+  takserver-certs:
+

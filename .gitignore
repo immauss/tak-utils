@@ -1,0 +1,8 @@
+*.zip
+*.tar
+tak-server-5.2
+tak-server-db-5.2
+.ib-token
+tak-server
+tak-server-db
+certs

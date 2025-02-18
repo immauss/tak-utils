@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: takserver-pv-local
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  hostPath:
+    path: "/mnt/takserver-data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: takserver-pvc-local
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-storage
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: takserver-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: takserver-db
+  template:
+    metadata:
+      labels:
+        app: takserver-db
+    spec:
+      containers:
+        - name: takserver-db
+          image: immauss/tak-db:25.02.03
+          env:
+            - name: envpass
+              valueFrom:
+                secretKeyRef:
+                  name: takserver-secret
+                  key: TAK_DB_PASSWORD
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: takserver-storage
+      volumes:
+        - name: takserver-storage
+          persistentVolumeClaim:
+            claimName: takserver-pvc-local
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: takserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: takserver
+  template:
+    metadata:
+      labels:
+        app: takserver
+    spec:
+      containers:
+        - name: takserver
+          image: immauss/tak-tak:25.02.03
+          env:
+            - name: envpass
+              valueFrom:
+                secretKeyRef:
+                  name: takserver-secret
+                  key: TAK_DB_PASSWORD
+            - name: STATE
+              value: "NSS"
+            - name: CITY
+              value: "NSC"
+            - name: ORGANIZATION
+              value: "NSO"
+            - name: ORGANIZATIONAL_UNIT
+              value: "NSOU"
+          ports:
+            - containerPort: 8080
+            - containerPort: 8443
+            - containerPort: 8444
+            - containerPort: 8446
+            - containerPort: 8087
+            - containerPort: 8088
+            - containerPort: 9000
+            - containerPort: 9001
+          volumeMounts:
+            - mountPath: /opt/tak
+              name: takserver-storage
+      volumes:
+        - name: takserver-storage
+          persistentVolumeClaim:
+            claimName: takserver-pvc-local
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: takserver-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30080
+    - port: 8443
+      targetPort: 8443
+      nodePort: 30443
+  selector:
+    app: takserver
