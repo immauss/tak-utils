@@ -1,5 +1,7 @@
 
 #!/bin/sh
+# First copy the bits from the temp to volume.
+cp /home/tak/certs/* /opt/tak/certs/
 # set and/or update the wait time.
 if ! [ -f /tmp/wait ]; then
 	echo "185" > /tmp/wait
