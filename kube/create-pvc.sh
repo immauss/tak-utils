@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define local storage directory
-LOCAL_STORAGE_DIR="/mnt/takserver-data"
+LOCAL_STORAGE_DIR="/home/scott/Projects/TAK/kube/local-storage"
 
 # Create the local storage directory if it doesn't exist
 if [ ! -d "$LOCAL_STORAGE_DIR" ]; then
@@ -12,7 +12,7 @@ else
 fi
 
 # Apply Persistent Volume and Persistent Volume Claim
-kubectl apply -f deployment-test.yaml
+kubectl apply -f deployment.yaml
 
 # Verify PV and PVC status
 kubectl get pv
