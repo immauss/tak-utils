@@ -28,7 +28,7 @@ LoadAdmin() {
     echo " Admin cert loaded successfully"
     # We'll look for this on startup and skip the AdminLoad if it exists.
     echo "Marking admin as loaded"
-    touch /home/tak/admin.loaded
+    touch /opt/tak/certs/files/admin.loaded
     echo " Exiting to force container resart on new cert "
     exit
   fi
@@ -54,7 +54,7 @@ echo "Running TAK server setup script..."
 # Only load the admin cert if needed.
 # This should be stored on  a persistent location so we don't do this on a 
 # container rebuild with existing data.
-if ! [ -f /home/tak/admin.loaded ]; then
+if ! [ -f /opt/tak/certs/files/admin.loaded ]; then
 	echo "Waiting for $(cat /tmp/wait) seconds"
 	date
 	sleep $(cat /tmp/wait)
