@@ -58,7 +58,7 @@
         <tls keystore="JKS" keystoreFile="/opt/tak/certs/files/takserver.jks" keystorePass="atakatak" truststore="JKS" truststoreFile="/opt/tak/certs/files/truststore-root.jks" truststorePass="atakatak" context="TLSv1.2" keymanager="SunX509"/>
     </security>
     <federation missionFederationDisruptionToleranceRecencySeconds="43200">
-        <federation-server webBaseUrl="https://172.18.0.3:8443/Marti">
+        <federation-server webBaseUrl="https://changeme:8443/Marti">
             <tls keystore="JKS" keystoreFile="/opt/tak/certs/files/takserver.jks" keystorePass="atakatak" truststore="JKS" truststoreFile="certs/files/fed-truststore.jks" truststorePass="atakatak" keymanager="SunX509"/>
             <v1Tls tlsVersion="TLSv1.2"/>
             <v1Tls tlsVersion="TLSv1.3"/>
