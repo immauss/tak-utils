@@ -1,3 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: takserver-db
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: takserver-db
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,20 +25,22 @@ spec:
     spec:
       containers:
         - name: takserver-db
-          image: immauss/tak-db:25.02.03
+          image: immauss/tak-db:25.02.04
           env:
-            - name: envpass
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: takserver-secret
                   key: TAK_DB_PASSWORD
+          ports:
+            - containerPort: 5432
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: takserver-storage
+              name: takserver-db-storage
       volumes:
-        - name: takserver-storage
+        - name: takserver-db-storage
           persistentVolumeClaim:
-            claimName: takdb-pvc-local
+            claimName: takserver-db-pvc
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -45,13 +58,15 @@ spec:
     spec:
       containers:
         - name: takserver
-          image: immauss/tak-tak:25.02.03
+          image: immauss/tak-tak:25.02.04
           env:
             - name: envpass
               valueFrom:
                 secretKeyRef:
                   name: takserver-secret
                   key: TAK_DB_PASSWORD
+            - name: DB_HOST
+              value: "takserver-db"
             - name: STATE
               value: "NSS"
             - name: CITY
@@ -72,7 +87,7 @@ spec:
       volumes:
         - name: takserver-storage
           persistentVolumeClaim:
-            claimName: takdata-pvc-local
+            claimName: takserver-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -81,7 +96,6 @@ metadata:
 spec:
   type: NodePort
   ports:
-
     - port: 8443
       targetPort: 8443
       nodePort: 30443
@@ -102,6 +116,5 @@ spec:
       targetPort: 9001
       nodePort: 31001
       name: port-9001 
-
   selector:
     app: takserver

@@ -6,3 +6,4 @@ tak-server-db-5.2
 tak-server
 tak-server-db
 certs
+local-storage

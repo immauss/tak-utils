@@ -1,8 +1,22 @@
 
 #!/bin/sh
-# First copy the bits from the temp to volume.
-cp /home/tak/certs/* /opt/tak/certs/
+# the CoreConfig.xml is mounted on volume. 
+# This is the implest way to maintain concurence across multiple containers.
+# But since it we can't mount a file in kubernetes, we ln -s the file to file in the volume.
+# This way we can update the file in the volume and the container will see the changes.
+if [ -L /opt/tak/CoreConfig.xml ]; then
+  echo "CoreConfig.xml is already a symlink"
+else
+  echo "CoreConfig.xml is not a symlink, linking..."
+  if ! [ -f /opt/tak/config/CoreConfig.xml ]; then
+    echo "CoreConfig.xml not found in /opt/tak/configs, creating..."
+    mv /opt/tak/CoreConfig.xml /opt/tak/configs/CoreConfig.xml
+  fi
+  ln -sf  /opt/tak/configs/CoreConfig.xml /opt/tak/CoreConfig.xml
+fi
 # set and/or update the wait time.
+# This give the database time to start up before we try to load the admin cert.
+# This is a hacky way to do this, but it works.
 if ! [ -f /tmp/wait ]; then
 	echo "185" > /tmp/wait
 else
@@ -28,7 +42,7 @@ LoadAdmin() {
     echo " Admin cert loaded successfully"
     # We'll look for this on startup and skip the AdminLoad if it exists.
     echo "Marking admin as loaded"
-    touch /opt/tak/certs/files/admin.loaded
+    touch /opt/tak/configs/admin.loaded
     echo " Exiting to force container resart on new cert "
     exit
   fi
@@ -54,7 +68,7 @@ echo "Running TAK server setup script..."
 # Only load the admin cert if needed.
 # This should be stored on  a persistent location so we don't do this on a 
 # container rebuild with existing data.
-if ! [ -f /opt/tak/certs/files/admin.loaded ]; then
+if ! [ -f /opt/tak/configs/admin.loaded ]; then
 	echo "Waiting for $(cat /tmp/wait) seconds"
 	date
 	sleep $(cat /tmp/wait)
