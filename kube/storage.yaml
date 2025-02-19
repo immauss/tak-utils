@@ -1,35 +1,35 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: takserver-db-pv
+  name: tak-db-pv
+  namespace: tak
 spec:
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  hostPath:
-    path: "/STORAGEPATH/takserver-db"
----
+  capacity:---
 apiVersion: v1
-kind: PersistentVolume
+kind: PersistentVolumeClaim
 metadata:
-  name: takserver-pv
+  name: takserver-pvc
+  namespace: tak
 spec:
-  capacity:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-storage
     storage: 10Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   hostPath:
-    path: "/STORAGEPATH/takserver-certs"
+    path: "/STORAGEPATH/db"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: takserver-db-pvc
+  name: tak-db-pvc
+  namespace: tak
 spec:
   accessModes:
     - ReadWriteOnce
@@ -39,9 +39,54 @@ spec:
   storageClassName: local-storage
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tak-certs-pv
+  namespace: tak
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  hostPath:
+    path: "/STORAGEPATH/tak-certs"
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: takserver-pvc
+  name: tak-certs-pvc
+  namespace: tak
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-storage
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tak-configs-pv
+  namespace: tak
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  hostPath:
+    path: "/STORAGEPATH/tak-configs"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tak-configs-pvc
+  namespace: tak
 spec:
   accessModes:
     - ReadWriteOnce

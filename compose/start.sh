@@ -23,7 +23,7 @@ else
 	wait=$( expr $(cat /tmp/wait) + 10 )
 	echo $wait > /tmp/wait
 fi
-
+# Define some functions
 LoadAdmin() {
   if [ -f /opt/tak/CoreConfig.xml ]; then
 	echo "/opt/tak/CoreConfig.xml found"

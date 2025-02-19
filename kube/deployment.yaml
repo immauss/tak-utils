@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: takserver-db
+  namespace: tak
 spec:
   ports:
     - port: 5432
@@ -13,6 +14,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: takserver-db
+  namespace: tak
 spec:
   replicas: 1
   selector:
@@ -25,7 +27,7 @@ spec:
     spec:
       containers:
         - name: takserver-db
-          image: immauss/tak-db:25.02.04
+          image: immauss/tak-db:25.02.05
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -38,14 +40,15 @@ spec:
             - mountPath: /var/lib/postgresql/data
               name: takserver-db-storage
       volumes:
-        - name: takserver-db-storage
+        - name: tak-db-storage
           persistentVolumeClaim:
-            claimName: takserver-db-pvc
+            claimName: tak-db-pvc
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: takserver
+  namespace: tak
 spec:
   replicas: 1
   selector:
@@ -58,7 +61,7 @@ spec:
     spec:
       containers:
         - name: takserver
-          image: immauss/tak-tak:25.02.04
+          image: immauss/tak-tak:25.02.05
           env:
             - name: envpass
               valueFrom:
@@ -83,16 +86,22 @@ spec:
             - containerPort: 9001
           volumeMounts:
             - mountPath: /opt/tak/certs/files
-              name: takserver-storage
+              name: taks-certs
+            - mountPath: /opt/tak/configs
+              name: tak-configs
       volumes:
-        - name: takserver-storage
+        - name: tak-certs
           persistentVolumeClaim:
-            claimName: takserver-pvc
+            claimName: tak-certs-pvc
+        - name: tak-configs
+          persistentVolumeClaim:
+            claimName: tak-configs-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: takserver-service
+  namespace: tak
 spec:
   type: NodePort
   ports:

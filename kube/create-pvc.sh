@@ -6,7 +6,8 @@ LOCAL_STORAGE_DIR="/Users/scott/Projects/tak-utils/kube/local-storage"
 # Create the local storage directory if it doesn't exist
 if [ ! -d "$LOCAL_STORAGE_DIR" ]; then
     mkdir -p $LOCAL_STORAGE_DIR/db
-    mkdir -p $LOCAL_STORAGE_DIR/data
+    mkdir -p $LOCAL_STORAGE_DIR/certs
+    mkdir -p $LOCAL_STORAGE_DIR/configs
     echo "Created local storage directory: $LOCAL_STORAGE_DIR"
 else
     echo "Local storage directory already exists: $LOCAL_STORAGE_DIR"
