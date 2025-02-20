@@ -54,7 +54,7 @@ while true; do
 		#replace subnet in pghba with actual subnet of the pod
 		POD_SUBNET=$(get_pod_net)
 		echo "Pod Subnet: $POD_SUBNET"
-		sed -i "s/POD_SUBNET/$POD_SUBNET/" $PGHBA
+		sed -i "s|POD_SUBNET|$POD_SUBNET|" $PGHBA
 		pg_ctl reload -D $PGDATA
 
 		cd /opt/tak/db-utils
