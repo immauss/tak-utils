@@ -12,4 +12,12 @@ ToDos:
 - Why is start-db.sh so wonky .... wtf while true; do .... 
   - This and the 3 scripts it calls need to be optimized. It's a Freaking mess in there.
 - takserver should be doing a pg_isready call to wait for the DB. 
+- Need to add the following to configs. 
+  - CoreConfig.example.xml   
+  - UserAuthenticationFile.xml
+  - CoreConfig.xml          
+  - TAKIgniteConfig.xml          
+  - logging-restrictsize.xml
+- Concern for multiple containers writing to xml files and causing corruption. 
+  - No multiple replicas until this is resolve/answered.
 
