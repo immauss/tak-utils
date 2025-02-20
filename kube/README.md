@@ -10,4 +10,6 @@ ToDos:
 - Fix load balancer so that ports are exposed correctly. (not the nodeport)
 - Get datbase to replicate to other nodes ... run in master/slave ... with 3 replicas. 
 - Why is start-db.sh so wonky .... wtf while true; do .... 
+  - This and the 3 scripts it calls need to be optimized. It's a Freaking mess in there.
+- takserver should be doing a pg_isready call to wait for the DB. 
 

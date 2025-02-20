@@ -35,8 +35,10 @@ else
 fi
 # This script will wait until the final postgres (which allows connections) started in the /docker-entrypoint.sh.
 # Then, create and initialize all the databases.
+echo "Running docker-entrypoint.sh"
 /usr/local/bin/docker-entrypoint.sh postgres &
 
+echo "Waiting for postgres server to start"
 while true; do
 	sleep 2
 		pg_isready -d postgres -h localhost -U postgres
@@ -49,22 +51,29 @@ while true; do
 		fi
 done
 
-echo "Installing TAKServer's version of PostgreSQL access-control policy."
-PGHBA=$(psql -AXqtc "SHOW hba_file")
-cp /opt/tak/db-utils/pg_hba.conf $PGHBA
-chmod 600 $PGHBA
-#replace subnet in pghba with actual subnet of the pod
-POD_SUBNET=$(get_pod_net)
-echo "Pod Subnet: $POD_SUBNET"
-sed -i "s|POD_SUBNET|$POD_SUBNET|" $PGHBA
-pg_ctl reload -D $PGDATA
+# echo "Installing TAKServer's version of PostgreSQL access-control policy."
+# PGHBA=$(psql -AXqtc "SHOW hba_file")
+# cp /opt/tak/db-utils/pg_hba.conf $PGHBA
+# chmod 600 $PGHBA
+# #replace subnet in pghba with actual subnet of the pod
+# POD_SUBNET=$(get_pod_net)
+# echo "Fixing pg_hba.conf with actual pod subnet $POD_SUBNET"
+# echo "Pod Subnet: $POD_SUBNET"
+# sed -i "s|POD_SUBNET|$POD_SUBNET|" $PGHBA
+# pg_ctl reload -D $PGDATA
 
 cd /opt/tak/db-utils
 ./configure.sh
 echo "Setting martiuser password"
 PASSWORD=$(echo $(grep -m 1 "<connection" /opt/tak/CoreConfig.xml)  | sed 's/.*password="//; s/".*//')
 psql -U postgres -c "ALTER ROLE martiuser PASSWORD '$PASSWORD' ;"
-
+#replace subnet in pghba with actual subnet of the pod
+PGHBA=$(psql -AXqtc "SHOW hba_file")
+POD_SUBNET=$(get_pod_net)
+echo "Fixing pg_hba.conf with actual pod subnet $POD_SUBNET"
+echo "Pod Subnet: $POD_SUBNET"
+sed -i "s|POD_SUBNET|$POD_SUBNET|" $PGHBA
+pg_ctl reload -D $PGDATA
 java -jar SchemaManager.jar upgrade
 
 # This should tail the postgres log
