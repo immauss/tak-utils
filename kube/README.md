@@ -8,4 +8,6 @@ ToDos:
   - Password - This is getting pulled from CoreConfig in both contianers. No need for secret mgmt.
   - ??
 - Fix load balancer so that ports are exposed correctly. (not the nodeport)
+- Get datbase to replicate to other nodes ... run in master/slave ... with 3 replicas. 
+- Why is start-db.sh so wonky .... wtf while true; do .... 
 

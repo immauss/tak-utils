@@ -42,29 +42,31 @@ while true; do
 		pg_isready -d postgres -h localhost -U postgres
 		success=$?
 		if [ $success -ne 0 ]; then
-		 echo "postgres server is not ready"
-		 continue;
+			 echo "postgres server is not ready"
+		else
+			echo "postgres server is ready"
+			break
 		fi
-		echo "postgres server is ready"
-
-		echo "Installing TAKServer's version of PostgreSQL access-control policy."
-		PGHBA=$(psql -AXqtc "SHOW hba_file")
-		cp /opt/tak/db-utils/pg_hba.conf $PGHBA
-		chmod 600 $PGHBA
-		#replace subnet in pghba with actual subnet of the pod
-		POD_SUBNET=$(get_pod_net)
-		echo "Pod Subnet: $POD_SUBNET"
-		sed -i "s|POD_SUBNET|$POD_SUBNET|" $PGHBA
-		pg_ctl reload -D $PGDATA
-
-		cd /opt/tak/db-utils
-		./configure.sh
-		echo "Setting martiuser password"
-		PASSWORD=$(echo $(grep -m 1 "<connection" /opt/tak/CoreConfig.xml)  | sed 's/.*password="//; s/".*//')
-		psql -U postgres -c "ALTER ROLE martiuser PASSWORD '$PASSWORD' ;"
-
-		java -jar SchemaManager.jar upgrade
-		tail -f /dev/null
-
-		break
 done
+
+echo "Installing TAKServer's version of PostgreSQL access-control policy."
+PGHBA=$(psql -AXqtc "SHOW hba_file")
+cp /opt/tak/db-utils/pg_hba.conf $PGHBA
+chmod 600 $PGHBA
+#replace subnet in pghba with actual subnet of the pod
+POD_SUBNET=$(get_pod_net)
+echo "Pod Subnet: $POD_SUBNET"
+sed -i "s|POD_SUBNET|$POD_SUBNET|" $PGHBA
+pg_ctl reload -D $PGDATA
+
+cd /opt/tak/db-utils
+./configure.sh
+echo "Setting martiuser password"
+PASSWORD=$(echo $(grep -m 1 "<connection" /opt/tak/CoreConfig.xml)  | sed 's/.*password="//; s/".*//')
+psql -U postgres -c "ALTER ROLE martiuser PASSWORD '$PASSWORD' ;"
+
+java -jar SchemaManager.jar upgrade
+
+# This should tail the postgres log
+tail -f /dev/null
+

@@ -28,12 +28,6 @@ spec:
       containers:
         - name: takserver-db
           image: immauss/tak-db:25.02.09
-          env:
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: takserver-secret
-                  key: TAK_DB_PASSWORD
           ports:
             - containerPort: 5432
           volumeMounts:
