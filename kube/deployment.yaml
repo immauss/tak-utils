@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: takserver-db
-          image: immauss/tak-db:25.02.05
+          image: immauss/tak-db:25.02.06
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -38,11 +38,16 @@ spec:
             - containerPort: 5432
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: takserver-db-storage
+              name: tak-db-storage
+            - mountPath: /opt/tak/configs
+              name: tak-configs
       volumes:
         - name: tak-db-storage
           persistentVolumeClaim:
             claimName: tak-db-pvc
+        - name: tak-configs
+          persistentVolumeClaim:
+            claimName: tak-configs-pvc
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -61,7 +66,7 @@ spec:
     spec:
       containers:
         - name: takserver
-          image: immauss/tak-tak:25.02.05
+          image: immauss/tak-tak:25.02.06
           env:
             - name: envpass
               valueFrom:
@@ -86,7 +91,7 @@ spec:
             - containerPort: 9001
           volumeMounts:
             - mountPath: /opt/tak/certs/files
-              name: taks-certs
+              name: tak-certs
             - mountPath: /opt/tak/configs
               name: tak-configs
       volumes:

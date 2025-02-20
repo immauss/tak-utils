@@ -20,7 +20,7 @@ kubectl apply -f $TMP_YAML
 rm $TMP_YAML
 
 # Verify PV and PVC status
-kubectl get pv
-kubectl get pvc
+kubectl get pv -n tak 
+kubectl get pvc -n tak
 
 echo "Local Kubernetes PV & PVC setup completed successfully."

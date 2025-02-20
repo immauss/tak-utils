@@ -1,5 +1,18 @@
 #!/bin/bash
-
+# the CoreConfig.xml is mounted on volume. 
+# This is the implest way to maintain concurence across multiple containers.
+# But since it we can't mount a file in kubernetes, we ln -s the file to file in the volume.
+# This way we can update the file in the volume and the container will see the changes.
+if [ -L /opt/tak/CoreConfig.xml ]; then
+  echo "CoreConfig.xml is already a symlink"
+else
+  echo "CoreConfig.xml is not a symlink, linking..."
+  if ! [ -f /opt/tak/config/CoreConfig.xml ]; then
+    echo "CoreConfig.xml not found in /opt/tak/configs, creating..."
+    mv /opt/tak/CoreConfig.xml /opt/tak/configs/CoreConfig.xml
+  fi
+  ln -sf  /opt/tak/configs/CoreConfig.xml /opt/tak/CoreConfig.xml
+fi
 # This script will wait until the final postgres (which allows connections) started in the /docker-entrypoint.sh.
 # Then, create and initialize all the databases.
 /usr/local/bin/docker-entrypoint.sh postgres &
