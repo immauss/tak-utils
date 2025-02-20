@@ -3,6 +3,7 @@ FROM registry1.dso.mil/ironbank/tpc/tak/tak-server-db:latest
 RUN mkdir /var/lib/postgresql/scripts
 COPY start-db.sh /var/lib/postgresql/scripts/start.sh
 COPY CoreConfig.xml /opt/tak/
+COPY pg_hba.conf /opt/tak/db-utils/pg_hba.conf
 LABEL maintainer="george.e.knauss.ctr@army.mil" \
       version="25.02.01" \
       description="TAK DB from Iron Bank with custom start script"

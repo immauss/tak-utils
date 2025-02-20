@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: takserver-db
-          image: immauss/tak-db:25.02.06
+          image: immauss/tak-db:25.02.08
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -66,13 +66,10 @@ spec:
     spec:
       containers:
         - name: takserver
-          image: immauss/tak-tak:25.02.06
+          image: immauss/tak-tak:25.02.08
           env:
-            - name: envpass
-              valueFrom:
-                secretKeyRef:
-                  name: takserver-secret
-                  key: TAK_DB_PASSWORD
+            - name: PUBLIC_FQDN
+              value: "mpetak.2cr.army.mil"
             - name: DB_HOST
               value: "takserver-db"
             - name: STATE
@@ -108,27 +105,30 @@ metadata:
   name: takserver-service
   namespace: tak
 spec:
-  type: NodePort
+  type: LoadBalancer
+  sessionAffinity: ClientIP
+  selector:
+    app: takserver
   ports:
     - port: 8443
       targetPort: 8443
-      nodePort: 30443
+      protocol: TCP
       name: port-8443
     - port: 8444
       targetPort: 8444
-      nodePort: 30444
+      protocol: TCP
       name: port-8444
     - port: 8446
       targetPort: 8446
-      nodePort: 30446
+      protocol: TCP
       name: port-8446
     - port: 8089
       targetPort: 8089
-      nodePort: 30089
+      protocol: TCP
       name: port-8089
     - port: 9001
       targetPort: 9001
-      nodePort: 31001
+      protocol: TCP
       name: port-9001 
   selector:
     app: takserver

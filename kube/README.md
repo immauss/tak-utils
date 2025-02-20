@@ -4,4 +4,8 @@ ToDos:
 - get it to actually run
 - move the admin.loaded to /opt/tak/certs/files - This make the fact that the admin cert is loaded in the DB persistent . . .
 - CA_NAME, used in the start script for cert generation, should be an environment variable.
+- remove bits from deployment not needed
+  - Password - This is getting pulled from CoreConfig in both contianers. No need for secret mgmt.
+  - ??
+- Fix load balancer so that ports are exposed correctly. (not the nodeport)
 

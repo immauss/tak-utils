@@ -16,7 +16,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   hostPath:
-    path: "/STORAGEPATH/db"
+    path: "/STORAGEPATH/tak-db"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

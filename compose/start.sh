@@ -1,7 +1,7 @@
 
 #!/bin/sh
 # the CoreConfig.xml is mounted on volume. 
-# This is the implest way to maintain concurence across multiple containers.
+# This is the simplest way to maintain concurence across multiple containers.
 # But since it we can't mount a file in kubernetes, we ln -s the file to file in the volume.
 # This way we can update the file in the volume and the container will see the changes.
 if [ -L /opt/tak/CoreConfig.xml ]; then
@@ -55,7 +55,7 @@ echo "Starting TAK server initialization..."
 # Check if certs already exist before generating
 if [ ! -f /opt/tak/certs/files/ca.pem ]; then
   echo "Certificates not found. Generating new certificates..."
-  cd /opt/tak/certs && export CA_NAME='mpetak.2cr.army.mil' && ./generateClusterCerts.sh
+  cd /opt/tak/certs && export CA_NAME="$PUBLIC_FQDN" && ./generateClusterCerts.sh
   echo "Certificates generated successfully."
 else
   echo "Certificates already exist. Skipping generation."

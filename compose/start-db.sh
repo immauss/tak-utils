@@ -1,4 +1,24 @@
 #!/bin/bash
+# Ugly function to get the pod's subnet
+# This is needed to update the pg_hba.conf file with the actual subnet of the pod.
+function get_pod_net() {
+	awk '$4 == "0001" {
+    hex=$2; mask=$8;
+    ip = sprintf("%d.%d.%d.%d", strtonum("0x" substr(hex,7,2)), strtonum("0x" substr(hex,5,2)), strtonum("0x" substr(hex,3,2)), strtonum("0x" substr(hex,1,2)));
+    subnet = sprintf("%d.%d.%d.%d", strtonum("0x" substr(mask,7,2)), strtonum("0x" substr(mask,5,2)), strtonum("0x" substr(mask,3,2)), strtonum("0x" substr(mask,1,2)));
+    cidr = 0;
+    split(subnet, octets, ".");
+    for (i=1; i<=4; i++) {
+        num = octets[i] + 0;  # Convert string to number
+        while (num > 0) {
+            cidr += and(num, 1);  # Count 1s in binary representation
+            num = rshift(num, 1); # Right shift to check next bit
+        }
+    }
+    print ip "/" cidr;
+}' /proc/net/route
+
+}
 # the CoreConfig.xml is mounted on volume. 
 # This is the implest way to maintain concurence across multiple containers.
 # But since it we can't mount a file in kubernetes, we ln -s the file to file in the volume.
@@ -31,6 +51,10 @@ while true; do
 		PGHBA=$(psql -AXqtc "SHOW hba_file")
 		cp /opt/tak/db-utils/pg_hba.conf $PGHBA
 		chmod 600 $PGHBA
+		#replace subnet in pghba with actual subnet of the pod
+		POD_SUBNET=$(get_pod_net)
+		echo "Pod Subnet: $POD_SUBNET"
+		sed -i "s/POD_SUBNET/$POD_SUBNET/" $PGHBA
 		pg_ctl reload -D $PGDATA
 
 		cd /opt/tak/db-utils
