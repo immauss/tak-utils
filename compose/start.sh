@@ -2,7 +2,7 @@
 #!/bin/sh
 # the CoreConfig.xml is mounted on volume. 
 # This is the simplest way to maintain concurence across multiple containers.
-# But since it we can't mount a file in kubernetes, we ln -s the file to file in the volume.
+# But since we can't mount a file in kubernetes, we ln -s the file to file in the volume.
 # This way we can update the file in the volume and the container will see the changes.
 if [ -L /opt/tak/CoreConfig.xml ]; then
   echo "CoreConfig.xml is already a symlink"
@@ -10,8 +10,11 @@ else
   echo "CoreConfig.xml is not a symlink, linking..."
   if ! [ -f /opt/tak/config/CoreConfig.xml ]; then
     echo "CoreConfig.xml not found in /opt/tak/configs, creating..."
-    mv /opt/tak/CoreConfig.xml /opt/tak/configs/CoreConfig.xml
+    mv /opt/tak/*.xml /opt/tak/configs/
   fi
+  for file in /opt/tak/configs/*.xml; do
+    ln -sf $file /opt/tak/$(basename $file)
+  done
   ln -sf  /opt/tak/configs/CoreConfig.xml /opt/tak/CoreConfig.xml
 fi
 # set and/or update the wait time.
