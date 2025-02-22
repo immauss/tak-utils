@@ -1,8 +1,9 @@
 FROM registry1.dso.mil/ironbank/tpc/tak/tak-server:latest
 # put updated start script in user home directory
 RUN mkdir /home/tak/scripts
-COPY ./start.sh /home/tak/scripts/start.sh
-COPY CoreConfig.xml /opt/tak/
+COPY scripts/start.sh /home/tak/scripts/start.sh
+# Trailing slash on the source causes the contents of the directory to be copied, not the directory itself
+COPY configs/ /opt/tak/  
 LABEL maintainer="george.e.knauss.ctr@army.mil" \
       version="25.02.01" \
       description="TAK server from Iron Bank with custom start script"

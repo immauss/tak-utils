@@ -20,4 +20,5 @@ ToDos:
   - logging-restrictsize.xml
 - Concern for multiple containers writing to xml files and causing corruption. 
   - No multiple replicas until this is resolve/answered.
-
+- Configs. 
+  - some don't exist at starup ... the userauth.xml  (or whatever it si named) so need to create it in configs and link back to /opt/taks
