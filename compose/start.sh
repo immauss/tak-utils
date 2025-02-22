@@ -8,8 +8,9 @@ if [ -L /opt/tak/CoreConfig.xml ]; then
   echo "CoreConfig.xml is already a symlink"
 else
   echo "CoreConfig.xml is not a symlink, linking..."
-  if ! [ -f /opt/tak/config/CoreConfig.xml ]; then
-    echo "CoreConfig.xml not found in /opt/tak/configs, creating..."
+  if ! [ -f /opt/tak/configs/CoreConfig.xml ]; then
+    echo "CoreConfig.xml not found in /opt/tak/configs."
+    echo "Moving *.xml to /opt/tak/configs/"
     mv /opt/tak/*.xml /opt/tak/configs/
   fi
   for file in /opt/tak/configs/*.xml; do
