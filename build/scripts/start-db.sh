@@ -19,19 +19,20 @@ function get_pod_net() {
 }' /proc/net/route
 
 }
-# the CoreConfig.xml is mounted on volume. 
-# This is the implest way to maintain concurence across multiple containers.
-# But since it we can't mount a file in kubernetes, we ln -s the file to file in the volume.
-# This way we can update the file in the volume and the container will see the changes.
+# the configs are in external storage for persistence.
+# We assume the user as populated the volume or storage with all of the configs.
+# Otherewise ... it won't work .... So they shoudl be there, we just need to link them.
+# Check to see if the CoreConfig.xml is a symlink, if not, link all the XMLs in /opt/tak/configs to /opt/tak
 if [ -L /opt/tak/CoreConfig.xml ]; then
-  echo "CoreConfig.xml is already a symlink"
+  echo "/opt/tak/CoreConfig.xml is already a symlink"
 else
-  echo "CoreConfig.xml is not a symlink, linking..."
-  if ! [ -f /opt/tak/configs/CoreConfig.xml ]; then
-    echo "CoreConfig.xml not found in /opt/tak/configs, creating..."
-    mv /opt/tak/CoreConfig.xml /opt/tak/configs/CoreConfig.xml
-  fi
-  ln -sf  /opt/tak/configs/CoreConfig.xml /opt/tak/CoreConfig.xml
+  echo "/opt/tak/CoreConfig.xml is not a symlink, setting up configs..."
+  # Check to see if there are any xml files in /opt/tak/configs
+  # if not, move them there.
+  rm /opt/tak/*.xml
+  for file in /opt/tak/configs/*.xml; do
+    ln -sf $file /opt/tak/$(basename $file)
+  done
 fi
 # This script will wait until the final postgres (which allows connections) started in the /docker-entrypoint.sh.
 # Then, create and initialize all the databases.
