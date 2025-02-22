@@ -5,17 +5,24 @@
 # But since we can't mount a file in kubernetes, we ln -s the file to file in the volume.
 # This way we can update the file in the volume and the container will see the changes.
 if [ -L /opt/tak/CoreConfig.xml ]; then
-  echo "CoreConfig.xml is already a symlink"
+  echo "/opt/tak/CoreConfig.xml is already a symlink"
 else
-  echo "CoreConfig.xml is not a symlink, linking..."
+  echo "/opt/tak/CoreConfig.xml is not a symlink, setting up configs..."
+  # Check to see if there are any xml files in /opt/tak/configs
+  # if not, move them there.
   if ! [ -f /opt/tak/configs/CoreConfig.xml ]; then
     echo "CoreConfig.xml not found in /opt/tak/configs, creating..."
     mv /opt/tak/*.xml /opt/tak/configs/
   fi
+  # Even th
   for file in /opt/tak/configs/*.xml; do
+    if [ -f /opt/tak/$(basename $file)]; then
+      echo "/opt/tak/$(basename $file) already exists, removing it."
+      rm /opt/tak/$(basename $file)
+    fi
     ln -sf $file /opt/tak/$(basename $file)
   done
-  ln -sf  /opt/tak/configs/CoreConfig.xml /opt/tak/CoreConfig.xml
+  
 fi
 # set and/or update the wait time.
 # This give the database time to start up before we try to load the admin cert.
