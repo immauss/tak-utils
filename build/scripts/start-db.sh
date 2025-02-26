@@ -64,7 +64,7 @@ done
 # pg_ctl reload -D $PGDATA
 
 cd /opt/tak/db-utils
-./configure.sh
+./takserver-setup-db.sh
 echo "Setting martiuser password"
 PASSWORD=$(echo $(grep -m 1 "<connection" /opt/tak/CoreConfig.xml)  | sed 's/.*password="//; s/".*//')
 psql -U postgres -c "ALTER ROLE martiuser PASSWORD '$PASSWORD' ;"
