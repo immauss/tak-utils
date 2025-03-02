@@ -55,7 +55,7 @@ LoadAdmin() {
 }
 wait_for_postgres() {
     echo "Waiting for PostgreSQL server to start..."
-    while ! pg_isready -h takserver-db; do
+    while ! /usr/pgsql-15/bin/pg_isready -h takserver-db; do
         echo "PostgreSQL server is not ready"
         sleep 2
     done
