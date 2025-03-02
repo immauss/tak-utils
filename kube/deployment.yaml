@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: takserver-db
-          image: immauss/tak-db:25.03.02
+          image: immauss/tak-db:25.03.03
           ports:
             - containerPort: 5432
           volumeMounts:
@@ -60,7 +60,7 @@ spec:
     spec:
       containers:
         - name: takserver
-          image: immauss/tak-tak:25.03.02 
+          image: immauss/tak-tak:25.03.03
           env:
             - name: PUBLIC_FQDN
               value: "mpetak.2cr.army.mil"

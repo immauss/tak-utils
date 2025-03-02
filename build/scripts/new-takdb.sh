@@ -102,7 +102,17 @@ setup_database() {
     if ! psql -XtAc "SELECT 1 FROM pg_database WHERE datname='$db_name'" | grep -q 1; then
         echo "Creating database $db_name..."
         createdb -U postgres --owner=$username $db_name
+        # Setup the database schema
+        java -jar /opt/tak/db-utils/SchemaManager.jar upgrade
+        if [ $? -ne 0 ]; then
+            echo "ERROR: Unable to update database schema!"
+            exit 1
+        else
+            echo "Database updated with SchemaManager.jar"
+        fi
     fi
+
+
 }
 
 # Configure PostgreSQL access and restart
