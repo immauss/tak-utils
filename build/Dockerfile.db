@@ -1,7 +1,7 @@
 FROM registry1.dso.mil/ironbank/tpc/tak/tak-server-db:latest
 # put updated start script in user home directory
 RUN mkdir /var/lib/postgresql/scripts
-COPY scripts/start-db.sh /var/lib/postgresql/scripts/start.sh
+COPY scripts/new-takdb.sh /var/lib/postgresql/scripts/start.sh
 # Trailing slash on the source causes the contents of the directory to be copied, not the directory itself
 COPY configs/ /opt/tak/  
 COPY configs/pg_hba.conf /opt/tak/db-utils/pg_hba.conf
