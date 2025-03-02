@@ -1,30 +1,18 @@
-#!/bin/bash
+#!/bin/sh
+if [ $# -eq 0 ]
+  then
+    ps -ef | grep takserver | grep -v grep | awk '{print $2}' | xargs kill
+fi
 
-# This script will wait until the final postgres (which allows connections) started in the /docker-entrypoint.sh.
-# Then, create and initialize all the databases.
-/usr/local/bin/docker-entrypoint.sh postgres &
+cd /opt/tak
+. ./setenv.sh
+java -jar -Xmx${CONFIG_MAX_HEAP}m -Dspring.profiles.active=config takserver.war &
+java -jar -Xmx${MESSAGING_MAX_HEAP}m -Dspring.profiles.active=messaging takserver.war &
+java -jar -Xmx${API_MAX_HEAP}m -Dspring.profiles.active=api -Dkeystore.pkcs12.legacy takserver.war &
+java -jar -Xmx${RETENTION_MAX_HEAP}m takserver-retention.jar &
+java -jar -Xmx${PLUGIN_MANAGER_MAX_HEAP}m -Dloader.path=WEB-INF/lib-provided,WEB-INF/lib,WEB-INF/classes,file:lib/ takserver-pm.jar &
 
-while true; do
-	sleep 2
-		pg_isready -d postgres -h localhost -U postgres
-		success=$?
-		if [ $success -ne 0 ]; then
-		 echo "postgres server is not ready"
-		 continue;
-		fi
-		echo "postgres server is ready"
-
-		echo "Installing TAKServer's version of PostgreSQL access-control policy."
-		PGHBA=$(psql -AXqtc "SHOW hba_file")
-		cp /opt/tak/db-utils/pg_hba.conf $PGHBA
-		chmod 600 $PGHBA
-		pg_ctl reload -D $PGDATA
-
-		cd /opt/tak/db-utils
-		./configure.sh
-
-		java -jar SchemaManager.jar upgrade
-		tail -f /dev/null
-
-		break
-done
+if ! [ $# -eq 0 ]
+  then
+    tail -f /dev/null
+fi

@@ -53,6 +53,16 @@ LoadAdmin() {
   fi
 
 }
+wait_for_postgres() {
+    echo "Waiting for PostgreSQL server to start..."
+    while ! pg_isready -h takserver-db; do
+        echo "PostgreSQL server is not ready"
+        sleep 2
+    done
+    echo "PostgreSQL server is ready"
+}
+
+
 
 # Starting TAK server initialization
 echo "Starting TAK server initialization..."
@@ -67,8 +77,12 @@ else
   echo "Certificates already exist. Skipping generation."
 fi
 
+
 # Run TAK server setup script
 echo "Running TAK server setup script..."
+# make sure the DB is running before we start the TAK server
+wait_for_postgres
+# Run the TAK server setup/start script
 /opt/tak/configureInDocker.sh init &>> /opt/tak/logs/takserver.log &
 
 # Only load the admin cert if needed.

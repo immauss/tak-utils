@@ -1,10 +1,10 @@
 FROM registry1.dso.mil/ironbank/tpc/tak/tak-server:latest
 # install psql client utilities
 USER root
-RUN dnf install -y --disableplugin=subscription-manager --nodocs \
-      postgresql15-15.1-1PGDG && \
-      dnf clean all && \
-      rm -rf /var/cache/dnf
+COPY postgresql15-15.12-1PGDG.rhel8.x86_64.rpm /tmp
+
+RUN rpm -ivh /tmp/postgresql15-15.12-1PGDG.rhel8.x86_64.rpm \
+      rm -rf /var/cache/dnf /tmp/postgresql15-15.12-1PGDG.rhel8.x86_64.rpm
 # put updated start script in user home directory
 USER tak
 RUN mkdir /home/tak/scripts
