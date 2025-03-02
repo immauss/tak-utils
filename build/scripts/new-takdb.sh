@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Function to clean up and shut down PostgreSQL
+# Function to cleanly shut down PostgreSQL
 cleanup() {
     echo "Container stopped, performing shutdown"
-    su -c "/usr/lib/postgresql/13/bin/pg_ctl -D /data/database stop" postgres
+    /usr/lib/postgresql/15/bin/pg_ctl -D $PGDATA
 }
 #this sets up a trap to call the cleanup function when the script exits
 trap 'cleanup' EXIT
@@ -116,7 +116,7 @@ setup_database() {
 }
 
 # Configure PostgreSQL access and restart
-configure_postgresql() {
+configure_postgresql_access() {
     local PGHBA=$(psql -AXqtc "SHOW hba_file")
     local POD_SUBNET=$(get_pod_net)
 
@@ -130,7 +130,7 @@ setup_configs
 /usr/local/bin/docker-entrypoint.sh postgres &
 wait_for_postgres
 setup_database
-configure_postgresql
+configure_postgresql_access
 
 
 
