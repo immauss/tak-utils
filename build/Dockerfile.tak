@@ -1,6 +1,6 @@
 FROM registry1.dso.mil/ironbank/tpc/tak/tak-server:latest
 # install psql client utilities
-RUN dnf instally -y --disableplugin=subscription-manager --nodocs \
+RUN dnf install -y --disableplugin=subscription-manager --nodocs \
       postgresql15-15.1-1PGDG && \
       dnf clean all && \
       rm -rf /var/cache/dnf
