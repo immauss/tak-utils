@@ -3,7 +3,7 @@ FROM registry1.dso.mil/ironbank/tpc/tak/tak-server:latest
 USER root
 COPY postgresql15-15.12-1PGDG.rhel8.x86_64.rpm /tmp
 
-RUN rpm -ivh /tmp/postgresql15-15.12-1PGDG.rhel8.x86_64.rpm && \
+RUN dnf install /tmp/postgresql15-15.12-1PGDG.rhel8.x86_64.rpm && \
      rm -rf /var/cache/dnf /tmp/postgresql15-15.12-1PGDG.rhel8.x86_64.rpm
 # put updated start script in user home directory
 USER tak
