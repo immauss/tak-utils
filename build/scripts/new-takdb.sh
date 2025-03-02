@@ -10,10 +10,25 @@ trap 'cleanup' EXIT
 
 # Function to get the pod's subnet for updating pg_hba.conf
 get_pod_net() {
-    awk '$4 == "0001" 
+    awk '
+    $4 == "0001" {
         hex=$2; mask=$8;
-        ip = sprintf("%d.%d.%d.%d", strtonum("0x" substr(hex,7,2)), strtonum("0x" substr(hex,5,2)), strtonum("0x" substr(hex,3,2)), strtonum("0x" substr(hex,1,2)));
-        subnet = sprintf("%d.%d.%d.%d", strtonum("0x" substr(mask,7,2)), strtonum("0x" substr(mask,5,2)), strtonum("0x" substr(mask,3,2)), strtonum("0x" substr(mask,1,2)));
+        
+        # Convert hex to IP
+        ip = sprintf("%d.%d.%d.%d", 
+            strtonum("0x" substr(hex,7,2)), 
+            strtonum("0x" substr(hex,5,2)), 
+            strtonum("0x" substr(hex,3,2)), 
+            strtonum("0x" substr(hex,1,2)));
+
+        # Convert mask to subnet
+        subnet = sprintf("%d.%d.%d.%d", 
+            strtonum("0x" substr(mask,7,2)), 
+            strtonum("0x" substr(mask,5,2)), 
+            strtonum("0x" substr(mask,3,2)), 
+            strtonum("0x" substr(mask,1,2)));
+
+        # Convert subnet mask to CIDR notation
         cidr = 0;
         split(subnet, octets, ".");
         for (i=1; i<=4; i++) {
@@ -23,9 +38,11 @@ get_pod_net() {
                 num = rshift(num, 1);
             }
         }
+
         print ip "/" cidr;
     }' /proc/net/route
 }
+
 
 # Ensure necessary config files are properly linked
 setup_configs() {
