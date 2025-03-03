@@ -70,7 +70,7 @@ setup_database() {
     local username='martiuser'
     local password=""
 
-    # Extract password from CoreConfig.xml or CoreConfig.example.xml
+    # Extract password from CoreConfig.xml 
     for config in /opt/tak/CoreConfig.xml; do
         if [ -f "$config" ]; then
             password=$(grep -m 1 "<connection" "$config" | sed 's/.*password="//; s/".*//')
@@ -78,11 +78,6 @@ setup_database() {
         fi
     done
 
-    # Use environment variable if set
-    if [ -n "$envpass" ]; then
-        password="$envpass"
-        sed -i "s/password=\"\"/password=\"$envpass\"/g" /opt/tak/CoreConfig.example.xml
-    fi
 
     # Ensure password is set
     if [ -z "$password" ]; then
