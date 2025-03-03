@@ -117,6 +117,9 @@ configure_postgresql_access() {
 
     echo "Updating pg_hba.conf with actual pod subnet $POD_SUBNET"
     sed -i "s|POD_SUBNET|$POD_SUBNET|" "$PGHBA"
+    echo "Applying tak postgresql.conf "
+    cp /opt/tak/tak-pg.conf /var/lib/postgresql/data/postgresql.conf
+    echo "Restarting PostgreSQL service."
     pg_ctl reload -D "$PGDATA"
 }
 
