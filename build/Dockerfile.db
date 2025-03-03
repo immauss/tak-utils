@@ -5,6 +5,7 @@ COPY scripts/new-takdb.sh /var/lib/postgresql/scripts/start.sh
 # Trailing slash on the source causes the contents of the directory to be copied, not the directory itself
 COPY configs/ /opt/tak/  
 COPY configs/pg_hba.conf /opt/tak/db-utils/pg_hba.conf
+COPY tak-pg.conf /var/lib/postgresql/data/postgresql.conf
 LABEL maintainer="george.e.knauss.ctr@army.mil" \
       version="25.02.01" \
       description="TAK DB from Iron Bank with custom start script"
