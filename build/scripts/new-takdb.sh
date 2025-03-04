@@ -3,7 +3,7 @@
 # Function to cleanly shut down PostgreSQL
 cleanup() {
     echo "Container stopped, performing shutdown"
-    /usr/lib/postgresql/15/bin/pg_ctl -D $PGDATA
+    /usr/pgsql-15/bin/pg_ctl -D $PGDATA
 }
 #this sets up a trap to call the cleanup function when the script exits
 trap 'cleanup' EXIT
