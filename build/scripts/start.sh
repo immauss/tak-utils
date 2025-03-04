@@ -48,7 +48,7 @@ LoadAdmin() {
     # We'll look for this on startup and skip the AdminLoad if it exists.
     echo "Marking admin as loaded"
     touch /opt/tak/configs/admin.loaded
-    echo "Setting admin password"
+    echo "Setting admin password to $ADMINPASS"
     cd /opt/tak && java -jar utils/UserManager.jar usermod --password "$ADMINPASS" -A admin 
     echo " Exiting to force container restart on new cert "
     exit
