@@ -106,15 +106,18 @@ setup_database() {
             echo "Database updated with SchemaManager.jar"
         fi
     fi
+}
+configure_postgres() {
     echo "Applying tak postgresql.conf "
+    mkdir -p /var/lib/postgresql/data
     cp /opt/tak/db-utils/*.conf /var/lib/postgresql/data/
     local POD_SUBNET=$(get_pod_net)
 
     echo "Updating pg_hba.conf with actual pod subnet $POD_SUBNET"
     sed -i "s|POD_SUBNET|$POD_SUBNET|" /var/lib/postgresql/data/pg_hba.conf
 
-    echo "Restarting PostgreSQL service."
-    pg_ctl reload -D "$PGDATA"
+    #echo "Restarting PostgreSQL service."
+    #pg_ctl reload -D "$PGDATA"
 
 }
 
@@ -122,6 +125,7 @@ setup_database() {
 
 # Start main process
 setup_configs
+configure_postgres
 # run the Generic PostgreSQL entrypoint script to get it setup and started
 /usr/local/bin/docker-entrypoint.sh postgres &
 # wait for postgres to start
