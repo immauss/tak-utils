@@ -106,36 +106,31 @@ setup_database() {
             echo "Database updated with SchemaManager.jar"
         fi
     fi
-
-
-}
-
-# Configure PostgreSQL access and restart
-configure_postgresql_access() {
-    local PGHBA=$(psql -AXqtc "SHOW hba_file")
+    echo "Applying tak postgresql.conf "
+    cp /opt/tak/db-utils/*.conf /var/lib/postgresql/data/
     local POD_SUBNET=$(get_pod_net)
 
     echo "Updating pg_hba.conf with actual pod subnet $POD_SUBNET"
-    sed -i "s|POD_SUBNET|$POD_SUBNET|" "$PGHBA"
-    echo "Applying tak postgresql.conf "
-    cp /opt/tak/tak-pg.conf /var/lib/postgresql/data/postgresql.conf
+    sed -i "s|POD_SUBNET|$POD_SUBNET|" /var/lib/postgresql/data/pg_hba.conf
+
     echo "Restarting PostgreSQL service."
     pg_ctl reload -D "$PGDATA"
+
 }
+
+
 
 # Start main process
 setup_configs
+# run the Generic PostgreSQL entrypoint script to get it setup and started
 /usr/local/bin/docker-entrypoint.sh postgres &
+# wait for postgres to start
 wait_for_postgres
+# config posgresql and setup the database
 setup_database
-configure_postgresql_access
-
-
-
-# Tail PostgreSQL log to keep container running
-#tail -f /dev/null
 
 # Wait for the main process to exit. This will happen when the container is stopped
 # or the main process is killed, e.g. due to an error.
 # the trap will then run the cleanup function to properly shut down PostgreSQL
+# this will hopefull prevent the database from getting corrupted
 wait $! 
