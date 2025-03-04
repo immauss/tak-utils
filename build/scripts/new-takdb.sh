@@ -116,8 +116,8 @@ configure_postgres() {
     echo "Updating pg_hba.conf with actual pod subnet $POD_SUBNET"
     sed -i "s|POD_SUBNET|$POD_SUBNET|" /var/lib/postgresql/data/pg_hba.conf
 
-    #echo "Restarting PostgreSQL service."
-    #pg_ctl reload -D "$PGDATA"
+    echo "Restarting PostgreSQL service."
+    pg_ctl restart -D "$PGDATA"
 
 }
 
@@ -125,12 +125,12 @@ configure_postgres() {
 
 # Start main process
 setup_configs
-configure_postgres
 # run the Generic PostgreSQL entrypoint script to get it setup and started
 /usr/local/bin/docker-entrypoint.sh postgres &
 # wait for postgres to start
 wait_for_postgres
 # config posgresql and setup the database
+configure_postgres
 setup_database
 
 # Wait for the main process to exit. This will happen when the container is stopped
