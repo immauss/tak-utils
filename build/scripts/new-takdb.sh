@@ -3,7 +3,7 @@
 # Function to cleanly shut down PostgreSQL
 cleanup() {
     echo "Container stopped, performing shutdown"
-    /usr/pgsql-15/bin/pg_ctl -D $PGDATA
+    /usr/pgsql-15/bin/pg_ctl -m fast -D $PGDATA
 }
 #this sets up a trap to call the cleanup function when the script exits
 trap 'cleanup' EXIT
@@ -117,7 +117,9 @@ configure_postgres() {
     sed -i "s|POD_SUBNET|$POD_SUBNET|" /var/lib/postgresql/data/pg_hba.conf
 
     echo "Restarting PostgreSQL service."
-    pg_ctl restart -D "$PGDATA"
+    pg_ctl stop -m fast -D "$PGDATA"
+    pg_ctl start -D "$PGDATA"
+    touch $PGDATA/initialized
 
 }
 
@@ -130,9 +132,10 @@ setup_configs
 # wait for postgres to start
 wait_for_postgres
 # config posgresql and setup the database
-configure_postgres
-setup_database
-
+if [ ! -f $PGDATA/initialized ]; then
+    configure_postgres
+    setup_database
+fi
 # Wait for the main process to exit. This will happen when the container is stopped
 # or the main process is killed, e.g. due to an error.
 # the trap will then run the cleanup function to properly shut down PostgreSQL
