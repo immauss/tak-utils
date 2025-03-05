@@ -1,0 +1,42 @@
+apiVersion: v1
+
+name: "tpc/tak/tak-server"
+tags:
+  - "5.2"
+  - "latest"
+args:
+  BASE_IMAGE: "redhat/ubi/ubi8"
+  BASE_TAG: "8.10"
+
+labels:
+  org.opencontainers.image.title: "TAK Server Core (Hardened)"
+  # Human-readable description of the software packaged in the image
+  org.opencontainers.image.description: "Hardened image of TAK Server"
+  # License(s) under which contained software is distributed
+  org.opencontainers.image.licenses: "GNU"
+  # URL to find more information on the image
+  org.opencontainers.image.url: "https://github.com/TAK-Product-Center/Server"
+  # Name of the distributing entity, organization or individual
+  org.opencontainers.image.vendor: "TAK Product Center (TPC)"
+  org.opencontainers.image.version: "5.2"
+  # Keywords to help with search (ex. "cicd,gitops,golang")
+  mil.dso.ironbank.image.keywords: "TAK,TAK Server, TAKServer"
+  # This value can be "opensource" or "commercial"
+  mil.dso.ironbank.image.type: "opensource"
+  # Product the image belongs to for grouping multiple images
+  mil.dso.ironbank.product.name: "TAK"
+
+resources:
+  - url: "https://artifacts.tak.gov:443/artifactory/TAKServer/release/5.2-RELEASE-16/takserver-docker-5.2-RELEASE-16.zip"
+    filename: "takserver-docker-5.2-RELEASE-16.zip"
+    validation:
+      type: sha256
+      value: bcd569ec11b0cb88e7e8de302ceba4e7dc120a5cb49a84470acd4add8fc9a2bd
+    auth:
+      type: basic
+      id: tcp-basic
+
+maintainers:
+  - email: "dan.2.garcia@rtx.com"
+    name: "Daniel Garcia"
+    username: "@dangarcia"
