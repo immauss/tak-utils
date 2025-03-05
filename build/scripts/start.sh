@@ -1,20 +1,6 @@
 
 #!/bin/sh
-# the configs are in external storage for persistence.
-# We assume the user as populated the volume or storage with all of the configs.
-# Otherewise ... it won't work .... So they shoudl be there, we just need to link them.
-# Check to see if the CoreConfig.xml is a symlink, if not, link all the XMLs in /opt/tak/configs to /opt/tak
-if [ -L /opt/tak/CoreConfig.xml ]; then
-  echo "/opt/tak/CoreConfig.xml is already a symlink"
-else
-  echo "/opt/tak/CoreConfig.xml is not a symlink, setting up configs..."
-  # Check to see if there are any xml files in /opt/tak/configs
-  # if not, move them there.
-  rm /opt/tak/*.xml
-  for file in /opt/tak/configs/*.xml; do
-    ln -sf $file /opt/tak/$(basename $file)
-  done
-fi
+
 # set and/or update the wait time.
 # This give the database time to start up before we try to load the admin cert.
 # This is a hacky way to do this, but it works.
@@ -24,13 +10,31 @@ else
 	wait=$( expr $(cat /tmp/wait) + 10 )
 	echo $wait > /tmp/wait
 fi
-# Define some functions
+###################################
+####### Define some functions #####
+###################################
+# the configs are in external storage for persistence.
+# We assume the user has populated the volume or storage with all of the configs.
+# Otherewise ... it won't work .... So they shoudl be there, we just need to link them.
+# Check to see if the CoreConfig.xml is a symlink, if not, link all the XMLs in /opt/tak/configs to /opt/tak
+setup_configs() {
+    if [ ! -L /opt/tak/CoreConfig.xml ]; then
+        echo "Setting up configs..."
+        rm -f /opt/tak/*.xml
+        for file in /opt/tak/configs/*.xml; do
+            ln -sf "$file" "/opt/tak/$(basename "$file")"
+        done
+    fi
+}
+# This function will load the admin cert into the TAK server.
+# This is a one time operation 
+
 LoadAdmin() {
   if [ -f /opt/tak/CoreConfig.xml ]; then
-	echo "/opt/tak/CoreConfig.xml found"
+	  echo "/opt/tak/CoreConfig.xml found"
   else
-	echo -e "No config found at /opt/tak/CoreConfig.xml\nCheck your docker-compose.yaml and ensure the file exists in the current directory"
-	exit
+	  echo -e "No config found at /opt/tak/CoreConfig.xml\nCheck your docker-compose.yaml and ensure the file exists in the current directory"
+	  exit
   fi
   echo "Loading Admin cert"
   cd /opt/tak && java -jar utils/UserManager.jar certmod -A certs/files/admin.pem 
@@ -44,14 +48,27 @@ LoadAdmin() {
     # We'll look for this on startup and skip the AdminLoad if it exists.
     echo "Marking admin as loaded"
     touch /opt/tak/configs/admin.loaded
-    echo " Exiting to force container resart on new cert "
+    echo "Setting admin password to ************               :D"
+    cd /opt/tak && java -jar utils/UserManager.jar usermod --password "$ADMINPASS" -A admin 
+    echo " Exiting to force container restart on new cert "
     exit
   fi
 
 }
+wait_for_postgres() {
+    echo "Waiting for PostgreSQL server to start..."
+    while ! /usr/pgsql-15/bin/pg_isready -h takserver-db; do
+        echo "PostgreSQL server is not ready"
+        sleep 2
+    done
+    echo "PostgreSQL server is ready"
+}
+
+
 
 # Starting TAK server initialization
 echo "Starting TAK server initialization..."
+setup_configs
 
 # Check if certs already exist before generating
 if [ ! -f /opt/tak/certs/files/ca.pem ]; then
@@ -62,8 +79,12 @@ else
   echo "Certificates already exist. Skipping generation."
 fi
 
+
 # Run TAK server setup script
 echo "Running TAK server setup script..."
+# make sure the DB is running before we start the TAK server
+wait_for_postgres
+# Run the TAK server setup/start script
 /opt/tak/configureInDocker.sh init &>> /opt/tak/logs/takserver.log &
 
 # Only load the admin cert if needed.

@@ -13,7 +13,8 @@ if [ ! -d "$LOCAL_STORAGE_DIR" ]; then
 else
     echo "Local storage directory already exists: $LOCAL_STORAGE_DIR"
 fi
-
+# Create namnespace if needed
+kubectl create namespace tak
 # Apply Persistent Volume and Persistent Volume Claim
 TMP_YAML=$(mktemp)
 sed -e "s|STORAGEPATH|$LOCAL_STORAGE_DIR|" storage.yaml > $TMP_YAML

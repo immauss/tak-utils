@@ -1,5 +1,13 @@
 FROM registry1.dso.mil/ironbank/tpc/tak/tak-server:latest
+# install psql client utilities
+USER root
+COPY postgresql15-15.12-1PGDG.rhel8.x86_64.rpm /tmp
+COPY postgresql15-libs-15.12-1PGDG.rhel8.x86_64.rpm /tmp
+RUN dnf -y install --nogpgcheck /tmp/*.rpm && \
+     rm -rf /var/cache/dnf /tmp/*.rpm && \
+     dnf clean all
 # put updated start script in user home directory
+USER tak
 RUN mkdir /home/tak/scripts
 COPY scripts/start.sh /home/tak/scripts/start.sh
 # Trailing slash on the source causes the contents of the directory to be copied, not the directory itself

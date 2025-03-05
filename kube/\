@@ -8,4 +8,4 @@ sleep 3
 kubectl -n tak get pods 
 sleep 5
 kubectl -n tak get pods 
-kubectl -n tak logs -fl app=takserver
+kubectl -n tak logs -l app=takserver
