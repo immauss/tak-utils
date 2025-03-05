@@ -1,5 +1,6 @@
 *.zip
 *.tar
+*.rpm
 tak-server-5.2
 tak-server-db-5.2
 .ib-token
