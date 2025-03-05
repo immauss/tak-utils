@@ -4,6 +4,8 @@ Initally on Docker with docker-compose
 Then kubernets on Docker Desktop
 Moving to AWS EKS
 
+The current build has not been tested with docker-compose as the primary focus has been on k8s. It should work, but will require some tweaks to the docker-compose.yaml.
+
 # Concepts
 You need only edit the docker-compose.yaml or deployment.yaml and set the the following:
 - STATE="NSS"
@@ -17,7 +19,9 @@ These are used to create the self signed certs used by TAK.
 - Using docker compose, you can put the configs in the appropirate local directory.
 
 # ToDos:
-x - sidecar to load the configs in the storage.
+[ ] - use password from env to replace value in CoreConfig.xml for DB password so it can stored as a secret.
+[ ] - sidecar to load the configs in the storage.
+[ ] - Build from scratch instead of using image from ironbank
 x- how to get CoreConfig consistent and into container
 x - update Coreconfig to point to actual database
 x - get it to actually run
