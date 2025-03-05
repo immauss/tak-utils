@@ -108,6 +108,8 @@ setup_database() {
     fi
 }
 configure_postgres() {
+    echo "Create Archive directory"
+    mkdir -p /var/lib/postgresql/archivedir
     echo "Applying tak postgresql.conf "
     mkdir -p /var/lib/postgresql/data
     cp /opt/tak/db-utils/*.conf /var/lib/postgresql/data/
