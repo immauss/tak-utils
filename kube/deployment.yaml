@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: takserver-db
-          image: immauss/tak-db:25.03.22
+          image: immauss/tak-db:25.03.02
           ports:
             - containerPort: 5432
           volumeMounts:

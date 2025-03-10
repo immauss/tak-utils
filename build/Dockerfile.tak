@@ -5,7 +5,11 @@ COPY postgresql15-15.12-1PGDG.rhel8.x86_64.rpm /tmp
 COPY postgresql15-libs-15.12-1PGDG.rhel8.x86_64.rpm /tmp
 RUN dnf -y install --nogpgcheck /tmp/*.rpm && \
      rm -rf /var/cache/dnf /tmp/*.rpm && \
-     dnf clean all
+     dnf clean all 
+RUN mkdir -p /opt/tak/configs \
+&& chown tak:tak /opt/tak/configs \
+&& mkdir -p /opt/tak/certs/files \
+&& chown tak:tak /opt/tak/certs/files 
 # put updated start script in user home directory
 USER tak
 RUN mkdir /home/tak/scripts
