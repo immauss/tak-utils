@@ -1,10 +1,11 @@
 FROM registry1.dso.mil/ironbank/tpc/tak/tak-server-db:latest
 # put updated start script in user home directory
+USER root
 RUN mkdir /var/lib/postgresql/scripts \
 && chown 1001:1001 /var/lib/postgresql/scripts \
 && mkdir /var/lib/postgresql/data \
 && chown 1001:1001: /var/lib/postgresql/data
-
+USER postgres
 COPY scripts/new-takdb.sh /var/lib/postgresql/scripts/start.sh
 # Trailing slash on the source causes the contents of the directory to be copied, not the directory itself
 COPY configs/ /opt/tak/  
