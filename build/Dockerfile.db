@@ -1,9 +1,9 @@
 FROM registry1.dso.mil/ironbank/tpc/tak/tak-server-db:latest
 # put updated start script in user home directory
 USER root
-RUN mkdir /var/lib/postgresql/scripts \
+RUN mkdir -p /var/lib/postgresql/scripts \
 && chown 1001:1001 /var/lib/postgresql/scripts \
-&& mkdir /var/lib/postgresql/data \
+&& mkdir -p /var/lib/postgresql/data \
 && chown 1001:1001: /var/lib/postgresql/data
 USER postgres
 COPY scripts/new-takdb.sh /var/lib/postgresql/scripts/start.sh
