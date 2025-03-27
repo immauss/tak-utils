@@ -4,7 +4,7 @@ networks:
 
 services:
   takserver-db:
-    image: immauss/tak-db:25.02.03
+    image: immauss/tak-db:25.03.25.1
     container_name: tak-db
     restart: unless-stopped
     environment:
@@ -18,7 +18,7 @@ services:
       - ./CoreConfig.xml:/opt/tak/CoreConfig.xml  # Bind mount the modified CoreConfig.xml
 
   takserver:
-    image: immauss/tak-tak:25.02.03
+    image: immauss/tak-tak:25.03.25.1
     container_name: tak
     restart: unless-stopped
     environment:
