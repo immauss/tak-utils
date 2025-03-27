@@ -1,0 +1,1050 @@
+apiVersion: v1
+
+name: "tpc/tak/tak-server-db"
+tags:
+  - "5.2"
+  - "latest"
+args:
+  BASE_IMAGE: "opensource/postgres/postgresql"
+  BASE_TAG: "15.3"
+
+labels:
+  org.opencontainers.image.title: "TAK Server Database (Hardened)"
+  # Human-readable description of the software packaged in the image
+  org.opencontainers.image.description: "Hardened image of TAK Server Database"
+  # License(s) under which contained software is distributed
+  org.opencontainers.image.licenses: "GNU"
+  # URL to find more information on the image
+  org.opencontainers.image.url: "https://github.com/TAK-Product-Center/Server"
+  # Name of the distributing entity, organization or individual
+  org.opencontainers.image.vendor: "TAK Product Center (TPC)"
+  org.opencontainers.image.version: "5.2"
+  # Keywords to help with search (ex. "cicd,gitops,golang")
+  mil.dso.ironbank.image.keywords: "TAK,TAK Server, TAKServer, TAK Database, TAK Server Database"
+  # This value can be "opensource" or "commercial"
+  mil.dso.ironbank.image.type: "opensource"
+  # Product the image belongs to for grouping multiple images
+  mil.dso.ironbank.product.name: "TAK-DB"
+
+resources:
+  - url: "https://artifacts.tak.gov:443/artifactory/TAKServer/dev/5.2-RELEASE-17/takserver-ironbank-db-5.2-RELEASE-17.zip"
+    filename: "takserver-ironbank-db-5.2-RELEASE-17.zip"
+    validation:
+      type: sha256
+      value: d83a1222497669d7c049fb822e609dfd6cc1518f34bd4b71b52c60b75e561d74
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/f/fontconfig-2.13.1-4.el8.x86_64.rpm"
+    filename: "fontconfig-2.13.rpm"
+    validation:
+      type: sha256
+      value: 7f2a8ed367bbe341e4c7570746cdeada3b68f6d1e498b411748b972190bce95c
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/d/dejavu-sans-fonts-2.35-7.el8.noarch.rpm"
+    filename: "dejavu-sans-fonts-2.35.rpm"
+    validation:
+      type: sha256
+      value: 488d2b14e88a91dfe40d5dbf9136f29b155d1fe22f6a6c442db528684cb55e95
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/d/dejavu-fonts-common-2.35-7.el8.noarch.rpm"
+    filename: "dejavu-fonts-common.rpm"
+    validation:
+      type: sha256
+      value: 82f36244bf29111473619a3565e69d3e8213e829d8eaf3e141c6c397d574ccf3
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/f/fontpackages-filesystem-1.44-22.el8.noarch.rpm"
+    filename: "fontpackages-filesystem-1.44.rpm"
+    validation:
+      type: sha256
+      value: db1fad3c2d8735e69084bd4b09ea963938e4dde2f2e096dc7a4ce146f18b7ab0
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/f/freetype-2.9.1-9.el8.x86_64.rpm"
+    filename: "freetype-2.9.rpm"
+    validation:
+      type: sha256
+      value: d106458cafffa042800cd00f226a3ea2d38a7f41e07aeab749bde8fb5dbea43e
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/l/libpng-1.6.34-5.el8.x86_64.rpm"
+    filename: "libpng.rpm"
+    validation:
+      type: sha256
+      value: 53d9bb412615966acdf9a6b1c26c5899a9c2c0b76a27f360d3d6076536d2540a
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/c/copy-jdk-configs-4.0-2.el8.noarch.rpm"
+    filename: "copy-jdk-configs-4.rpm"
+    validation:
+      type: sha256
+      value: 5520be18012994682dd26352095e9ddea7d63e95c557cb411048a721cd6322c8
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/lua-5.3.4-12.el8.x86_64.rpm"
+    filename: "lua.rpm"
+    validation:
+      type: sha256
+      value: 31f8fbc1504f93090f0eaf548e5d7e05d668133459d60b32d45170767df01558
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64/getPackage/cups-libs-2.2.6-51.el8_8.1.x86_64.rpm"
+    filename: "cups-libs-2.rpm"
+    validation:
+      type: sha256
+      value: 9502426d0fcbc68a632668da59776814397c755860f1a8232e577fdf9a6e1b14
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/j/javapackages-filesystem-5.3.0-1.module+el8+2447+6f56d9a6.noarch.rpm"
+    filename: "javapackages-filesystem.rpm"
+    validation:
+      type: sha256
+      value: 0a2665447c6c2559229438b3cbb9b2a9c8d54886fc5cc9801d823d9991386a55
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/l/lksctp-tools-1.0.18-3.el8.x86_64.rpm"
+    filename: "lksctp-tools.rpm"
+    validation:
+      type: sha256
+      value: 68fac30590576a29d6308beed508e68b5a4b2175f539b1812cab20e83e9136d8
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libxcb-1.13.1-1.el8.x86_64.rpm"
+    filename: "libxcb.rpm"
+    validation:
+      type: sha256
+      value: 39e6bc1e8101e536066554702d5d6b25f8cad359fb5e02ac598cfdad56eafb6d
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libXau-1.0.9-3.el8.x86_64.rpm"
+    filename: "libXau-1.0.9-3.rpm"
+    validation:
+      type: sha256
+      value: a260f793e49805b188908e2f30c4687abe4e023b20c28a85d10d2371556c3981
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libXcomposite-0.4.4-14.el8.x86_64.rpm"
+    filename: "libXcomposite.rpm"
+    validation:
+      type: sha256
+      value: 731f537d1872b14290514b5a956c8c012a781f209a6a209ad9ba2cae1c56c388
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libXext-1.3.4-1.el8.x86_64.rpm"
+    filename: "libXext.rpm"
+    validation:
+      type: sha256
+      value: ddafccd3f010fc75da6de158b5a68fd672f8b3554ac403065490318ce2be05f3
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libXi-1.7.10-1.el8.x86_64.rpm"
+    filename: "libXi.rpm"
+    validation:
+      type: sha256
+      value: efc45d8d4a0227c6f104cc45622b2251b198dd830aeb1cacd5c47dcd67da7186
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libXrender-0.9.10-7.el8.x86_64.rpm"
+    filename: "libXrender.rpm"
+    validation:
+      type: sha256
+      value: 871672b8a9ffbe887b32e736494c1f005795bc7ffda026c6a063ee0d28788709
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libXtst-1.2.3-7.el8.x86_64.rpm"
+    filename: "libXtst.rpm"
+    validation:
+      type: sha256
+      value: 5b245bf383bccc194e13f9f328a1a374f6ac39becd1c8756a18654575e258687
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/x/xorg-x11-fonts-Type1-7.5-19.el8.noarch.rpm"
+    filename: "xorg-x11-fonts-Type1.rpm"
+    validation:
+      type: sha256
+      value: c457303288fd423f9f320f3a05bc5a592455a75f14ea76db3a482633e59137ae
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/x/xorg-x11-font-utils-7.5-41.el8.x86_64.rpm"
+    filename: "xorg-x11-font-utils.rpm"
+    validation:
+      type: sha256
+      value: 966566770c97b65d5c2d743631322241fc8508f56c2698fc706bd7dba3761199
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/p/pkgconf-pkg-config-1.4.2-1.el8.x86_64.rpm"
+    filename: "pkgconf-pkg-config.rpm"
+    validation:
+      type: sha256
+      value: 1c4a8674eafc31d36030f3fd0c081326d4301570d4e35b59d6f6ef1e163f655b
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/p/pkgconf-m4-1.4.2-1.el8.noarch.rpm"
+    filename: "pkgconf-m4.rpm"
+    validation:
+      type: sha256
+      value: 9a89874a5b8326c85c0b34b02c122ffc052b32a12b20354ce95859ac5296a159
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/l/libpkgconf-1.4.2-1.el8.x86_64.rpm"
+    filename: "libpkgconf.rpm"
+    validation:
+      type: sha256
+      value: 96fadfed6a8225a89b331e7b62ed8ee74b393cea1520fa0d89f6f0dc1a458fb3
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/p/pkgconf-1.4.2-1.el8.x86_64.rpm"
+    filename: "pkgconf.rpm"
+    validation:
+      type: sha256
+      value: b9d0a4c0e16db4c05b2d0690216d8c5da2db7d67bc765a00ce2a32c5f810c245
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libfontenc-1.1.3-8.el8.x86_64.rpm"
+    filename: "libfontenc.rpm"
+    validation:
+      type: sha256
+      value: 5b2545c178e52a79fd09414db8788d4c9f96b48f6e4d568c762e70b56b4858e8
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/t/ttmkfdir-3.0.9-54.el8.x86_64.rpm"
+    filename: "ttmkfdir.rpm"
+    validation:
+      type: sha256
+      value: 9fa5c302015e9b059411358c7844d177449de258f97b228ee95a321af8d2ddf0
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/15/redhat/rhel-8-x86_64/postgis33_15-3.3.2-1.rhel8.x86_64.rpm"
+    filename: "postgis33_15.rpm"
+    validation:
+      type: sha256
+      value: 662e72e051fda8ac551ac68e3ec7568e4e618783f846583c8226b1d6ca20352e
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/CGAL-4.14-1.rhel8.x86_64.rpm"
+    filename: "CGAL.rpm"
+    validation:
+      type: sha256
+      value: 2b35742ebdcfa5321d819f6d01c9d893e565aa78d76ee591772a0e0a3c2331de
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/o/OpenEXR-libs-2.2.0-12.el8.x86_64.rpm"
+    filename: "OpenEXR-libs.rpm"
+    validation:
+      type: sha256
+      value: 04318ae6799708671c0775295dcc0b02f2288ec27d00004d8aa756bae5ea99f4
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/SFCGAL-1.4.1-13.rhel8.x86_64.rpm"
+    filename: "SFCGAL.rpm"
+    validation:
+      type: sha256
+      value: d4ed8de56e6549c35351f9b2990927e5ca7a310fb413988b5ad32bdc683629c9
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/SFCGAL-libs-1.4.1-13.rhel8.x86_64.rpm"
+    filename: "SFCGAL-libs.rpm"
+    validation:
+      type: sha256
+      value: a8cf7a38467737e15d3bd1334502ab371a6c25d6f5c32235a56df0eadaa780c9
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/PowerTools/x86_64/os/Packages/s/SuperLU-5.2.0-7.el8.x86_64.rpm"
+    filename: "SuperLU.rpm"
+    validation:
+      type: sha256
+      value: e004f15110232ae3eec849b1e3a988f24d5ab9fe94042a42194518d1f71fa90c
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/x86_64/getPackage/armadillo-10.8.2-1.el8.x86_64.rpm"
+    filename: "armadillo.rpm"
+    validation:
+      type: sha256
+      value: ef2fec257fc7e6e1340e428b6b727c58e9d2a20fe6f65e632dff0b4494d1f11e 
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/a/arpack-3.7.0-1.el8.x86_64.rpm"
+    filename: "arpack.rpm"
+    validation:
+      type: sha256
+      value: 3ec52f6623f65c35cb2c68f7ba8f1b1e9609bb08a6c2888457d79ced39b0be00
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/BaseOS/x86_64/os/Packages/a/atlas-3.10.3-8.el8.1.x86_64.rpm"
+    filename: "atlas.rpm"
+    validation:
+      type: sha256
+      value: 0174e214cab14f4afd0b932a736cc085660ef302d6509d6b33b9f7fa78c5dbaf
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/b/blas-3.8.0-8.el8.x86_64.rpm"
+    filename: "blas.rpm"
+    validation:
+      type: sha256
+      value: 11aa333f59e338f0d7266918b0fca31d9e399e6df129dd3902e4effecb3a6f66
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/b/boost-atomic-1.66.0-13.el8.x86_64.rpm"
+    filename: "boost-atomic.rpm"
+    validation:
+      type: sha256
+      value: 81a52eb6c974139e40dcc0a2a0b0a74df75f8bafd69d4d040c8564c73a6f051c
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/b/boost-chrono-1.66.0-13.el8.x86_64.rpm"
+    filename: "boost-chrono.rpm"
+    validation:
+      type: sha256
+      value: 13d9d6b2e16d4ed399364fa302313002eda8954a1972660b00766f69603ca130
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/b/boost-date-time-1.66.0-13.el8.x86_64.rpm"
+    filename: "boost-date-time.rpm"
+    validation:
+      type: sha256
+      value: 0ccb46e0969c83decfaf0d1cc6e31eb7383d146828bf50ba01201be26d7b0dbe
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/b/boost-serialization-1.66.0-13.el8.x86_64.rpm"
+    filename: "boost-serialization.rpm"
+    validation:
+      type: sha256
+      value: 1dc4557a94ae44f131959cd41c5b993a0d71c0261bca77d7eea5b71d692136b9
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/b/boost-system-1.66.0-13.el8.x86_64.rpm"
+    filename: "boost-system.rpm"
+    validation:
+      type: sha256
+      value: fcae1cd46f216c9c9741894d2c4995d7ad14848ad06139f07a2dfc59d886d5a2
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/b/boost-thread-1.66.0-13.el8.x86_64.rpm"
+    filename: "boost-thread.rpm"
+    validation:
+      type: sha256
+      value: e0091543ecc67f75c2d21f14c484f15e377045e9b885e37bda6c2ada4367ceaa
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/c/cfitsio-3.47-1.el8.x86_64.rpm"
+    filename: "cfitsio.rpm"
+    validation:
+      type: sha256
+      value: 899dac8e5515c9f35d73cd8d4680c3c01cc35b75a8afefca6277d9f5e652259c
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/c/cmake-filesystem-3.26.5-1.el8_9.x86_64.rpm"
+    filename: "cmake-filesystem.rpm"
+    validation:
+      type: sha256
+      value: 9071bc352bc347c8ac25bbc94f0dfa1298f69e7ed4737190855073ceba84c25c 
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/f/freexl-1.0.6-4.el8.x86_64.rpm"
+    filename: "freexl.rpm"
+    validation:
+      type: sha256
+      value: 74d916062061a35a9fe68822b2c186b6480d6e29e99ed2d377dcb8090ee529fa
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/gdal35-libs-3.5.3-4.rhel8.x86_64.rpm"
+    filename: "gdal35-libs.rpm"
+    validation:
+      type: sha256
+      value: a7603b7d01f8ecf7a70b1bbcca2c4f35955ada92647d5a0f520f68b55a027016
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/geos311-3.11.2-1.rhel8.x86_64.rpm"
+    filename: "geos311.rpm"
+    validation:
+      type: sha256
+      value: d5d2da88b38ec721648f92fadc9deae183c888a112c7cc8dcaabb5c8751931b3
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/g/glx-utils-8.4.0-5.20181118git1830dcb.el8.x86_64.rpm"
+    filename: "glx-utils.rpm"
+    validation:
+      type: sha256
+      value: 751056a3ca9f371de399e28f0269347b8b83253401cace95a5420c30714fbdb2
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/g/gpsbabel-1.6.0-3.el8.x86_64.rpm"
+    filename: "gpsbabel.rpm"
+    validation:
+      type: sha256
+      value: 9be3b3aa72f15e3b78216b66b736cc3aec6d36b729179455fc47fef460a355e9
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/h/hdf-4.2.14-5.el8.x86_64.rpm"
+    filename: "hdf.rpm"
+    validation:
+      type: sha256
+      value: bad68ee1d4d2ddef3da8430a2654b873f0bfab162669fd032d98263e1ed9a03c
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/h/hdf5-1.10.5-4.el8.x86_64.rpm"
+    filename: "hdf5.rpm"
+    validation:
+      type: sha256
+      value: b6e3a0948096fbf2bb01705f9f673be8a47fb426f8704f0514c8fc6cf34680bb
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/aarch64/getPackage/hwdata-0.314-8.8.el8.noarch.rpm"
+    filename: "hwdata.rpm"
+    validation:
+      type: sha256
+      value: bcb72f160c29b479bea51839cc951ed10967a6646a0992f55616ea5252dbecf1
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/i/ilmbase-2.2.0-13.el8.x86_64.rpm"
+    filename: "ilmbase.rpm"
+    validation:
+      type: sha256
+      value: 3c26d17ca41443fc64b84014cc157573f6c6a11498df67f9017e54025fac87ce
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/l/lapack-3.8.0-8.el8.x86_64.rpm"
+    filename: "lapack.rpm"
+    validation:
+      type: sha256
+      value: 856ce4af4b9d90ef9a09b2849ebcc34c6772fbd93d798336671f6bb0cac734bc
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libICE-1.0.9-15.el8.x86_64.rpm"
+    filename: "libICE.rpm"
+    validation:
+      type: sha256
+      value: ab35a04e5f165b30e22368b0b51071949e277a42861092b790cfbee283d474b8
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libSM-1.2.3-1.el8.x86_64.rpm"
+    filename: "libSM.rpm"
+    validation:
+      type: sha256
+      value: db15deba4b67c54368ae5fee595d7266391c27d5a08b65d3307def5861e8f08a
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libXxf86vm-1.1.4-9.el8.x86_64.rpm"
+    filename: "libXxf86vm.rpm"
+    validation:
+      type: sha256
+      value: c051509ace6612d97eb1a9dd0514360889fd7fbe42c7b8e207fb6e09bab4f832
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/codeready-builder/os/Packages/l/libaec-1.0.2-3.el8.x86_64.rpm"
+    filename: "libaec.rpm"
+    validation:
+      type: sha256
+      value: 5f9519b97f7e56a5cde9b3679e2d44d96d13d7e4fbcd6f0b3515ce86afbb20fc
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/l/libbsd-0.12.2-1.el8.x86_64.rpm"
+    filename: "libbsd.rpm"
+    validation:
+      type: sha256
+      value: 51b09d1f21f884076fba7f3c7c692c215cfe66153bad2200c4bfd217dc1a3184
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/l/libdrm-2.4.115-2.el8.x86_64.rpm"
+    filename: "libdrm.rpm"
+    validation:
+      type: sha256
+      value: 86becbf4c7dd367cb2e5a1dd286690f64bd3d3b63f1cbcb36493ecc07d74810e
+
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/l/libevdev-1.10.0-1.el8.x86_64.rpm"
+    filename: "libevdev.rpm"
+    validation:
+      type: sha256
+      value: 5a7495b56a09a76c54ad5fce64f6adbeda62d1cc6bd0accce4c9386ac9bff4fb
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/libgeotiff16-1.6.0-6.rhel8.x86_64.rpm"
+    filename: "libgeotiff16.rpm"
+    validation:
+      type: sha256
+      value: 56450ca19119318ebd36f7729a6dcc0101317a8bf3fd95da9a4df23e0e078aff
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/libgeotiff16-devel-1.6.0-6.rhel8.x86_64.rpm"
+    filename: "libgeotiff16-devel.rpm"
+    validation:
+      type: sha256
+      value: b26bf316a76017ede8bb833f26e523e3af34a338ab4f346c83c5792855fe6703
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64/getPackage/libgfortran-8.5.0-18.0.2.el8.x86_64.rpm"
+    filename: "libgfortran.rpm"
+    validation:
+      type: sha256
+      value: f3edf97afa45ff060d0c4dc9be88f101433c3b744a183e54b76926373649e2ab
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libglvnd-1.3.4-1.el8.x86_64.rpm"
+    filename: "libglvnd.rpm"
+    validation:
+      type: sha256
+      value: 3af9dde48a6845286f981286c3b5d59554502e5d6868d46295a33306ab607215
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libglvnd-egl-1.3.4-1.el8.x86_64.rpm"
+    filename: "libglvnd-egl.rpm"
+    validation:
+      type: sha256
+      value: f7c600d5fa18bb0f9081177c0baae0dd8e14ac30169bb07e41e1f14134a94950
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libglvnd-glx-1.3.4-1.el8.x86_64.rpm"
+    filename: "libglvnd-glx.rpm"
+    validation:
+      type: sha256
+      value: cfbf47ce2861579cb06f28f1c760a041e70634c9f86aca5eaf282cf4a51444d0
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64/getPackage/libgomp-8.5.0-18.0.2.el8.x86_64.rpm"
+    filename: "libgomp.rpm"
+    validation:
+      type: sha256
+      value: f768fb389000fe5b3ad52207fd30591b2ee231ba43215e0d955e73ef2acfb948
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/l/libgta-1.2.1-1.el8.x86_64.rpm"
+    filename: "libgta.rpm"
+    validation:
+      type: sha256
+      value: b9d614bbfe65c3e177d33becd84ce96561de7ec54b2be26997756eeb7c6efbca
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/BaseOS/x86_64/os/Packages/l/libgudev-232-4.el8.x86_64.rpm"
+    filename: "libgudev.rpm"
+    validation:
+      type: sha256
+      value: cd37ee530a5b6ab5d597182c4ed16403e587dcc05bc89ddcb152a9b5d1bdc3d1
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/l/libinput-1.16.3-3.el8_6.x86_64.rpm"
+    filename: "libinput.rpm"
+    validation:
+      type: sha256
+      value: 5448d678b4816353fcde30f677f369b1ac64b98b4f38f70bb834a02c47a65a3f
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/l/libkml-1.3.0-24.el8.x86_64.rpm"
+    filename: "libkml.rpm"
+    validation:
+      type: sha256
+      value: 2bead657b1b22f4e9099e57c2c1c667b74471e1ad22dcd13449de8413f46651a
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/l/libmd-1.1.0-1.el8.x86_64.rpm"
+    filename: "libmd.rpm"
+    validation:
+      type: sha256
+      value: 0f3adcd33f4f331fb76044cea2be4b9f8f5b8e747bf8cefd3d93a97d05adb344
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/l/libpciaccess-0.14-1.el8.x86_64.rpm"
+    filename: "libpciaccess.rpm"
+    validation:
+      type: sha256
+      value: 831a51570e09368c7b720567827b74a46ed5a01c7c39906c185c385bc50079d9
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/PowerTools/x86_64/os/Packages/l/libqhull_r-2015.2-5.el8.x86_64.rpm"
+    filename: "libqhull_r.rpm"
+    validation:
+      type: sha256
+      value: 4bd5967fd533e4896453ff6de9c7309f785ff757630863b368c04191b0aaf2d7
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64/getPackage/libquadmath-8.5.0-18.0.5.el8.x86_64.rpm"
+    filename: "libquadmath.rpm"
+    validation:
+      type: sha256
+      value: 96b221083c3ab6168d9bad66fef607a9ba835640c1ebb746483bac078c34af19
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/librttopo-1.1.0-2.rhel8.x86_64.rpm"
+    filename: "librttopo.rpm"
+    validation:
+      type: sha256
+      value: c879954f6f58f507349f0b048f09d102daaa3c55fc50cfef17b236b1a5e0aa88
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/libspatialite50-5.0.1-6.rhel8.x86_64.rpm"
+    filename: "libspatialite50.rpm"
+    validation:
+      type: sha256
+      value: 2e2d353946952785a4b777a249f9d5200f7aeb36f7042e49d5ff2532d1aae9bd
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/libspatialite50-devel-5.0.1-6.rhel8.x86_64.rpm"
+    filename: "libspatialite50-devel.rpm"
+    validation:
+      type: sha256
+      value: 0d36a007cb4c8000dbc10dd14766e3ba4117ee5604127d2abac23663fb8668fe
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/l/libtool-ltdl-2.4.6-25.el8.x86_64.rpm"
+    filename: "libtool-ltdl.rpm"
+    validation:
+      type: sha256
+      value: d805c42ee9293a8ba35f49af63e3f7d813420d4a62ee4cff5ecd7391be851a9b
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/BaseOS/x86_64/os/Packages/l/libusb-0.1.5-12.el8.x86_64.rpm"
+    filename: "libusb.rpm"
+    validation:
+      type: sha256
+      value: 9a84499cfdc28dd3f6213a1398627148887e3b82abe29043c1617bb2315251d5
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/l/libwacom-1.6-3.el8.x86_64.rpm"
+    filename: "libwacom.rpm"
+    validation:
+      type: sha256
+      value: 289ee5b010e498d615a969b48e600668c2351bd34b2e2908b24fc57d827494a9
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/l/libwacom-data-1.6-3.el8.noarch.rpm"
+    filename: "libwacom-data.rpm"
+    validation:
+      type: sha256
+      value: 7e5450f5dc8a0ebb6181f737709bfa81cd5879251d77ccf6aa28b1b8024e5f11
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libwayland-server-1.21.0-1.el8.x86_64.rpm"
+    filename: "libwayland-server.rpm"
+    validation:
+      type: sha256
+      value: ec475c06b2139413c3e4dcfc871e8ff51c5ce4d43fdfb3f33b852a0b552a7e72
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/l/libxkbcommon-x11-0.9.1-1.el8.x86_64.rpm"
+    filename: "libxkbcommon-x11.rpm"
+    validation:
+      type: sha256
+      value: d8864abf376820a1a7ac8060fa753486b6a189f1ed3f9287080740dcd89d511f
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libxshmfence-1.3-2.el8.x86_64.rpm"
+    filename: "libxshmfence.rpm"
+    validation:
+      type: sha256
+      value: 26954c74597adda2a9d58df0455edc26e58e0bf289d179f1b4ffde2da8ce7d0e
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/m/mariadb-connector-c-3.1.11-2.el8_3.x86_64.rpm"
+    filename: "mariadb-connector-c.rpm"
+    validation:
+      type: sha256
+      value: f5170e0068786352f33eae6c805e38dc509ae45e3afa9c5d6b88b548b1d6c7b7
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/m/mariadb-connector-c-config-3.1.11-2.el8_3.noarch.rpm"
+    filename: "mariadb-connector-c-config.rpm"
+    validation:
+      type: sha256
+      value: 0d0bb0df9ab2f8f0f6b153fa742f4d4f0d3e5a1b96ccdd618f0cf63ade6b219c
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/m/minizip-2.8.9-2.el8.x86_64.rpm"
+    filename: "minizip.rpm"
+    validation:
+      type: sha256
+      value: 3f078ae5f0e07adcd9d6790de3877c6f384279b62ce674a7a6cf1d86481770da
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/m/mtdev-1.1.5-12.el8.x86_64.rpm"
+    filename: "mtdev.rpm"
+    validation:
+      type: sha256
+      value: 8809fd17cfb85233f77bf2f56339df0d1eecb89739a6423363127b0ea6600dc7
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/n/netcdf-4.7.0-3.el8.x86_64.rpm"
+    filename: "netcdf.rpm"
+    validation:
+      type: sha256
+      value: 2604b8b9e09470eed70c35c5ab1f94007bb3878119ada0a47bcd7c7c9fe1b8d2
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/ogdi41-4.1.0-3.rhel8.x86_64.rpm"
+    filename: "ogdi41.rpm"
+    validation:
+      type: sha256
+      value: 7c00b5d294834ac260f3881541cfb0dd2ff2f7b99a6b916f6c8cdff47532d357
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/o/openblas-0.3.15-6.el8.x86_64.rpm"
+    filename: "openblas.rpm"
+    validation:
+      type: sha256
+      value: 4723027d6a43e6ad8567798556a8c24b474595c5d0af5b2244b842a502ac55eb
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/PowerTools/x86_64/os/Packages/o/openblas-openmp-0.3.15-6.el8.x86_64.rpm"
+    filename: "openblas-openmp.rpm"
+    validation:
+      type: sha256
+      value: 606f984297f6028f7a883498304fd32149f5685c8a0a699ea6d27c5392e1da95
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/o/openblas-threads-0.3.15-6.el8.x86_64.rpm"
+    filename: "openblas-threads.rpm"
+    validation:
+      type: sha256
+      value: 7e7e1d0184c5ce337267beb4ee72fa65a3d54462f34fad4f3441dc100d45e17e
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/PowerTools/x86_64/os/Packages/o/openblas-threads64_-0.3.15-6.el8.x86_64.rpm"
+    filename: "openblas-threads64_.rpm"
+    validation:
+      type: sha256
+      value: 9213a82989b685f2bcacdc3a41b145b5a0d0e966812a8786a4a4109b5705a4e5
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/o/openjpeg2-2.4.0-5.el8.x86_64.rpm"
+    filename: "openjpeg2.rpm"
+    validation:
+      type: sha256
+      value: 936f9d627574c4cdf571d034dcc4a03c9d623f6a275c8d83deac055a55f529dd
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/p/pcre2-utf16-10.32-3.el8_6.x86_64.rpm"
+    filename: "pcre2-utf16.rpm"
+    validation:
+      type: sha256
+      value: 91df207ab87117b29695ad94eccaa1fab29dad76e6ea459647b16ece6d4aad08
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/p/poppler-data-0.4.9-1.el8.noarch.rpm"
+    filename: "poppler-data.rpm"
+    validation:
+      type: sha256
+      value: 1898737c962ed657b14bdb461f053a12983a64804210e4f64b3cb2e59d653335
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/proj82-8.2.1-3.rhel8.x86_64.rpm"
+    filename: "proj82.rpm"
+    validation:
+      type: sha256
+      value: 0c60854aea40ee61430a3736ebb567cdc8bcfcefc452a1132de4dcc475cd0305
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/proj90-9.0.1-1.rhel8.x86_64.rpm"
+    filename: "proj90.rpm"
+    validation:
+      type: sha256
+      value: 3175d9de3c5e447a816b7ed07812aca3e280e99988c466623f79dab09c198c75
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/p/protobuf-c-1.3.0-8.el8.x86_64.rpm"
+    filename: "protobuf-c.rpm"
+    validation:
+      type: sha256
+      value: 6e2a47aefaa75dd3d834144e98ea648112677f10a6c1dbc4402bddd82e15389e
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://yum.oracle.com/repo/OracleLinux/OL8/appstream/x86_64/getPackage/qt5-qtbase-5.15.3-5.el8.x86_64.rpm"
+    filename: "qt5-qtbase.rpm"
+    validation:
+      type: sha256
+      value: 281f8948980febe3ddceaa3b6959501ef5ceac3bfacf2fc65432516932803cac
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://yum.oracle.com/repo/OracleLinux/OL8/appstream/x86_64/getPackage/qt5-qtbase-common-5.15.3-5.el8.noarch.rpm"
+    filename: "qt5-qtbase-common.rpm"
+    validation:
+      type: sha256
+      value: 74eaf1ade24c9c29eb46831f7b294c8fff6de5dff063628b2daf6571e40c349d
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://yum.oracle.com/repo/OracleLinux/OL8/appstream/x86_64/getPackage/qt5-qtbase-gui-5.15.3-5.el8.x86_64.rpm"
+    filename: "qt5-qtbase-gui.rpm"
+    validation:
+      type: sha256
+      value: 6d1a69469271095c3ced0b31786acd73050c9f7f2ff23df527e69f6929f89a8b
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/q/qt5-qtsvg-5.15.3-2.el8.x86_64.rpm"
+    filename: "qt5-qtsvg.rpm"
+    validation:
+      type: sha256
+      value: aa009ec0316ae77232ea1d9874363c3b54e796458f3bcf28d45fefcfb251c3c1
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/s/shapelib-1.5.0-12.el8.x86_64.rpm"
+    filename: "shapelib.rpm"
+    validation:
+      type: sha256
+      value: ff1f7bc5861319354a031cea5c39eba03a6b80b168c370a69eb99716dc26690e
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/u/unixODBC-2.3.7-1.el8.x86_64.rpm"
+    filename: "unixODBC.rpm"
+    validation:
+      type: sha256
+      value: 053679a455b5287be9ca2eff650754d1e4ac993789e074912f2506b995465a98
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://ziply.mm.fcix.net/epel/8/Everything/x86_64/Packages/u/uriparser-0.9.7-1.el8.x86_64.rpm"
+    filename: "uriparser.rpm"
+    validation:
+      type: sha256
+      value: 4af6dc8ef6c412004f9bbfa4f29d406902d04185e955e59197a615079798c362
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/x/xcb-util-0.4.0-10.el8.x86_64.rpm"
+    filename: "xcb-util.rpm"
+    validation:
+      type: sha256
+      value: 6ebf438302daa7bc28891c653189c996167653984d1aa0762bf613794e54fa57
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/x/xcb-util-image-0.4.0-9.el8.x86_64.rpm"
+    filename: "xcb-util-image.rpm"
+    validation:
+      type: sha256
+      value: dc496ff028eae9da686561fe2b1780019410dbd3eaa7ff5b8e5965899c3dd8bd
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/x/xcb-util-keysyms-0.4.0-7.el8.x86_64.rpm"
+    filename: "xcb-util-keysyms.rpm"
+    validation:
+      type: sha256
+      value: a823fccbf1831a1322b6b8a48e0d96a9565b7f8109f18ba9955ce31b0f125899
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/x/xcb-util-renderutil-0.3.9-10.el8.x86_64.rpm"
+    filename: "xcb-util-renderutil.rpm"
+    validation:
+      type: sha256
+      value: 40af6ee2a9fa2b64db5b80d3534291f0f76b81ea78f88eb7f55d83403af2af83
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/Packages/x/xcb-util-wm-0.4.1-12.el8.x86_64.rpm"
+    filename: "xcb-util-wm.rpm"
+    validation:
+      type: sha256
+      value: ac45f1f4586b5a240d8f022bdaf9afcd9e5300e5d45a98948d046436f60712cc
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/x/xerces-c-3.2.5-1.el8.x86_64.rpm"
+    filename: "xerces-c.rpm"
+    validation:
+      type: sha256
+      value: 8b2387a4e242e6d0206ff6950d47889457731bc0f7dca30c114dc2c625252384
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/g/giflib-5.1.4-3.el8.x86_64.rpm"
+    filename: "giflib-5.1.4-3.el8.x86_64.rpm"
+    validation:
+      type: sha256
+      value: adb609ee93db65bcb8e4e9ee1afa3456744fe3c0f8fc2565d22e02b8f1d63bfc
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libjpeg-turbo-1.5.3-12.el8.x86_64.rpm"
+    filename: "libjpeg-turbo-1.5.3-12.el8.x86_64.rpm"
+    validation:
+      type: sha256
+      value: 82dba75523110a451d9f4dbb112c68ba15b1cded1519bc982423de032903dbc9
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libxkbcommon-0.9.1-1.el8.x86_64.rpm"
+    filename: "libxkbcommon-0.9.1-1.el8.x86_64.rpm"
+    validation:
+      type: sha256
+      value: 25b13ea50e21233dc5fccf42da344fbf24605dde38db9b94e49739ae39faa072
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libwayland-client-1.21.0-1.el8.x86_64.rpm"
+    filename: "libwayland-client-1.21.0-1.el8.x86_64.rpm"
+    validation:
+      type: sha256
+      value: f79cef9a39104aa6447efaedd3e6fc702014cd4a5a543932c7c1c9897253818f
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/libXfixes-5.0.3-7.el8.x86_64.rpm"
+    filename: "libXfixes-5.0.3-7.el8.x86_64.rpm"
+    validation:
+      type: sha256
+      value: 42cd48bff06dee66716b6a6362d6469168d4657511fcf3bd16003c441dc88fea
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/l/lcms2-2.9-2.el8.x86_64.rpm"
+    filename: "lcms2-2.9-2.el8.x86_64.rpm"
+    validation:
+      type: sha256
+      value: 7f2796df5a80f13ea11b3988175cc34cc2964d411480114c6c94671f054adf43
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/h/harfbuzz-1.7.5-3.el8.x86_64.rpm"
+    filename: "harfbuzz-1.7.5-3.el8.x86_64.rpm"
+    validation:
+      type: sha256
+      value: 7db729705dc3879ea3aba2ed0a7c1f3b1c1417bd45d6cd8c7829d3522ccd4d6f
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/j/jbigkit-libs-2.1-14.el8.x86_64.rpm"
+    filename: "jbigkit-libs-2.1-14.el8.x86_64.rpm"
+    validation:
+      type: sha256
+      value: 5a55a840cccc45aef19b261cfff264420d28fcb31351b57da85d067fda73d7b7
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/x/xkeyboard-config-2.28-1.el8.noarch.rpm"
+    filename: "xkeyboard-config-2.28-1.el8.noarch.rpm"
+    validation:
+      type: sha256
+      value: 340b3c65becfca3d39f2afeed9659505a33ee870270c4d115d9fefe8929ff806
+    auth:
+      type: basic
+      id: tcp-basic
+  - url: "https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/Packages/g/graphite2-1.3.10-10.el8.x86_64.rpm"
+    filename: "graphite2-1.3.10-10.el8.x86_64.rpm"
+    validation:
+      type: sha256
+      value: 2917eaeca5b9b33ab21feb85ed331e0d09704e0930d70c04ca50883a97e4a61f
+    auth:
+      type: basic
+      id: tcp-basic
+
+  
+
+  
+
+maintainers:
+  - email: "eric.m.ort@rtx.com"
+    name: "Eric Ort"
+    username: "@ericort"
+  - email: "dan.2.garcia@rtx.com"
+    name: "Daniel Garcia"
+    username: "@dangarcia"

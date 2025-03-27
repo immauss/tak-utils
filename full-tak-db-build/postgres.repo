@@ -1,0 +1,29 @@
+[postgresql-15]
+name=PostgreSQL 15 Repository
+baseurl=https://download.postgresql.org/pub/repos/yum/16/redhat/rhel-8-x86_64/
+enabled=1
+gpgcheck=1
+gpgkey=https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
+module_hotfixes=1
+[postgres-common]
+name=PostgreSQL common RPMs for RHEL 8 - x86_64
+baseurl=https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/
+enabled=1
+gpgcheck=1
+gpgkey=https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
+module_hotfixes=1
+[PowerTools]
+name=PowerTools
+baseurl=http://dl.rockylinux.org/pub/rocky/8/PowerTools/x86_64/os/
+enabled=1
+gpgcheck=1
+gpgkey=https://dl.rockylinux.org/pub/rocky/RPM-GPG-KEY-rockyofficial
+module_hotfixes=1
+[RL8-AppStream]
+name=Rocky Linux 8 - AppStream
+baseurl=http://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/
+enabled=1
+gpgcheck=1
+gpgkey=https://dl.rockylinux.org/pub/rocky/RPM-GPG-KEY-rockyofficial
+module_hotfixes=1
+
